@@ -1,0 +1,11 @@
+{
+  "name": "your-vendor/mondial-relay-module",
+  "license": "LGPL-3.0-or-later",
+  "type": "thelia-module",
+  "require": {
+    "xaviborja/php-mondialrelay-api": "dev-master"
+  },
+  "extra": {
+    "installer-name": "MondialRelay"
+  }
+}

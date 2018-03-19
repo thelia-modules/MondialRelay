@@ -1,0 +1,37 @@
+{form name="mondialrelay.settings_form"}
+    <form action="{url path="/admin/module/MondialRelay/settings/save"}" {form_enctype form=$form} method="post" data-ajax-target="#general-form-container">
+        {include file = "includes/inner-form-toolbar.html"
+            hide_flags = true
+            page_url   = "{url path='/admin/module/MondialRelay'}"
+            close_url  = "{url path='/admin/modules'}"
+            hide_save_and_close_button = true
+        }
+        
+        {form_hidden_fields form=$form}
+    
+        {if $form_error}<div class="alert alert-danger">{$form_error_message}</div>{/if}
+    
+        <div class="row">
+            <div class="col-md-6">
+                {render_form_field field="code_enseigne" value={module_config module="MondialRelay" key='code_enseigne' locale="en_US"}}
+                {render_form_field field="private_key" value={module_config module="MondialRelay" key='private_key' locale="en_US"}}
+                {render_form_field field="webservice_url" value={module_config module="MondialRelay" key='webservice_url' locale="en_US"}}
+                {render_form_field field="google_maps_api_key" value={module_config module="MondialRelay" key='google_maps_api_key' locale="en_US"}}
+            </div>
+            <div class="col-md-6">
+                {render_form_field field="allow_relay_delivery" value={module_config module="MondialRelay" key='allow_relay_delivery' locale="en_US"}}
+                {render_form_field field="allow_home_delivery" value={module_config module="MondialRelay" key='allow_home_delivery' locale="en_US"}}
+                {*
+                {render_form_field field="allow_insurance" value={module_config module="MondialRelay" key='allow_insurance' locale="en_US"}}
+                *}
+                
+                <div class="text-center" style="margin-top: 40px; padding: 0 20%;">
+                    <p><a href="https://www.younivers.fr"><img src="{image file="mondialrelay/assets/img/younivers.png" source="MondialRelay"}"></a></p>
+                    <p>{intl l='Development of this module is sponsored by <a href="https://www.younivers.fr">you\'Nivers</a> web and communication agency in Roanne.' d="mondialrelay.bo.default"}</p>
+                </div>
+            </div>
+        </div>
+    </form>
+{/form}
+
+{include file="mondialrelay/includes/error-dialog.html"}

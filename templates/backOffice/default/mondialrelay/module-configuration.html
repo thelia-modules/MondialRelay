@@ -1,0 +1,38 @@
+{$current_tab = {$smarty.get.tab|default:'general'}}
+<div class="col-md-12 general-block-decorator">
+    <div class="row">
+        <div class="col-md-12 title">
+            {intl l="Mondial Relay delivery configuration" d='mondialrelay.bo.default'}
+        </div>
+    </div>
+    
+    <ul class="nav nav-tabs clearfix">
+        <li {if $current_tab == 'general'}class="active"{/if}><a href="#general" data-tab-name="general" data-toggle="tab">{intl l="Configuration" d='mondialrelay.bo.default'}</a></li>
+        <li {if $current_tab == 'prices'}class="active"{/if}><a href="#prices" data-tab-name="prices" data-toggle="tab">{intl l="Prices" d='mondialrelay.bo.default'}</a></li>
+        {*
+        <li {if $current_tab == 'insurances'}class="active"{/if}><a href="#insurances" data-tab-name="insurances" data-toggle="tab">{intl l="Insurances" d='mondialrelay.bo.default'}</a></li>
+        *}
+    </ul>
+    
+    <div class="tab-content">
+        <div class="tab-pane fade {if $current_tab == 'general'}active in{/if}" id="general">
+            <div class="form-container" id="general-form-container">
+                {include file="mondialrelay/ajax/general.html"}
+            </div>
+        </div>
+        
+        <div class="tab-pane fade {if $current_tab == 'prices'}active in{/if}" id="prices">
+            <div class="form-container" id="prices-form-container">
+                {include file="mondialrelay/ajax/prices.html" module_id=$module_id}
+            </div>
+        </div>
+        
+        {*
+        <div class="tab-pane fade {if $current_tab == 'insurances'}active in{/if}" id="insurances">
+            <div class="form-container" id="insurances-form-container">
+                {include file="mondialrelay/ajax/insurances.html"}
+            </div>
+        </div>
+        *}
+    </div>
+</div>

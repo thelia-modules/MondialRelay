@@ -1,0 +1,53 @@
+<script>
+    $(function() {
+        function ajaxSubmit($zis) {
+            var data, url;
+        
+            var notif = $.notify({
+                message: '<i class="glyphicon glyphicon-time"></i> {intl l="Saving data, please wait..." d="mondialrelay.bo.default"}'
+            }, {
+                type: 'info',
+                allow_dismiss: true
+            });
+        
+            if ($zis.attr('action')) {
+                data = $zis.serialize();
+                url = $zis.attr('action');
+            } else {
+                url = $zis.attr('href');
+            }
+        
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: data,
+                success: function (result) {
+                    $($zis.data('ajax-target')).html(result);
+                
+                    notif.close();
+                    $.notify({
+                        message: '<i class="glyphicon glyphicon-ok"></i> {intl l="Update finished." d="mondialrelay.bo.default"}'
+                    }, {
+                        type: 'success',
+                        allow_dismiss: true,
+                        delay: 2000
+                    });
+                },
+                error: function () {
+                    notif.close();
+                    alert("{intl l='Sorry, something goes wrong. Please try again.' d='mondialrelay.bo.default'}");
+                }
+            });
+        }
+    
+        $(document).on('submit', 'form[data-ajax-target]', function (ev) {
+            ajaxSubmit($(this));
+            ev.preventDefault();
+        });
+    
+        $(document).on('click', 'a[data-ajax-target]', function (ev) {
+            ajaxSubmit($(this));
+            ev.preventDefault();
+        });
+    });
+</script>

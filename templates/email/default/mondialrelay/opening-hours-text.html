@@ -1,0 +1,8 @@
+{strip}
+{loop type="mondialrelay.selected-pickup-point" name="avec-pickup" order_id=$order_id}
+{if count($OPENINGS) > 0}{foreach $OPENINGS as $opening}
+{intl l="Pickup relay opening hours:" d="mondialrelay.email.default"}
+{$opening.day}: {if $opening.opening_time_1}{$opening.opening_time_1} - {$opening.closing_time_1}{/if}   {if $opening.opening_time_2}{$opening.opening_time_2} - {$opening.closing_time_2}{/if}
+{/foreach}{/if}
+{/loop}
+{/strip}

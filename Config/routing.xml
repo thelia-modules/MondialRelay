@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+
+    <!-- Settings management -->
+
+    <route id="mondial_relay.settings.save" path="/admin/module/MondialRelay/settings/save">
+        <default key="_controller">MondialRelay\Controller\BackOffice\ConfigurationController::saveAction</default>
+    </route>
+
+
+    <!-- Area attributes management -->
+
+    <route id="mondial_relay.area-attributes.save" path="/admin/module/MondialRelay/area-attributes/save/{areaId}/{moduleId}">
+        <default key="_controller">MondialRelay\Controller\BackOffice\AreaAttributesController::saveAction</default>
+        <requirement key="areaId">\d+</requirement>
+        <requirement key="moduleId">\d+</requirement>
+    </route>
+
+    <!-- Prices management -->
+
+    <route id="mondial_relay.price.save" path="/admin/module/MondialRelay/prices/save/{areaId}/{moduleId}">
+        <default key="_controller">MondialRelay\Controller\BackOffice\PriceController::saveAction</default>
+        <requirement key="areaId">\d+</requirement>
+        <requirement key="moduleId">\d+</requirement>
+    </route>
+
+    <route id="mondial_relay.price.create" path="/admin/module/MondialRelay/prices/create/{areaId}/{moduleId}">
+        <default key="_controller">MondialRelay\Controller\BackOffice\PriceController::createAction</default>
+        <requirement key="areaId">\d+</requirement>
+        <requirement key="moduleId">\d+</requirement>
+    </route>
+
+    <route id="mondial_relay.price.delete" path="/admin/module/MondialRelay/prices/delete/{priceId}/{moduleId}">
+        <default key="_controller">MondialRelay\Controller\BackOffice\PriceController::deleteAction</default>
+        <requirement key="priceId">\d+</requirement>
+        <requirement key="moduleId">\d+</requirement>
+    </route>
+
+    <!-- Insurances management -->
+
+    <route id="mondial_relay.insurance.save" path="/admin/module/MondialRelay/insurances/save">
+        <default key="_controller">MondialRelay\Controller\BackOffice\InsuranceController::saveAction</default>
+    </route>
+
+    <route id="mondial_relay.insurance.create" path="/admin/module/MondialRelay/insurances/create">
+        <default key="_controller">MondialRelay\Controller\BackOffice\InsuranceController::createAction</default>
+    </route>
+
+    <route id="mondial_relay.insurance.delete" path="/admin/module/MondialRelay/insurances/delete/{insuranceId}">
+        <default key="_controller">MondialRelay\Controller\BackOffice\InsuranceController::deleteAction</default>
+        <requirement key="insuranceId">\d+</requirement>
+    </route>
+
+    <!-- Front routes -->
+
+    <route id="mondial_relay.relay_map" path="MondialRelay/relay-map">
+        <default key="_controller">MondialRelay\Controller\FrontOffice\MapManagement::getRelayMapAction</default>
+    </route>
+
+</routes>

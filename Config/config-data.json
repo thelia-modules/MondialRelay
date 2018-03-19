@@ -1,0 +1,269 @@
+{
+    "shippingZones": [
+        {
+            "name": "Mondial Relay - Relay delivery Zone 1",
+            "delivery_time_in_days": 3,
+            "delivery_type": 1,
+            "countries": [
+                "FRA",
+                "BEL",
+                "LUX",
+                "MCO"
+            ],
+            "prices": [
+                {
+                    "up_to": 0.5,
+                    "price_euro": 4.55
+                },
+                {
+                    "up_to": 1,
+                    "price_euro": 5.25
+                },
+                {
+                    "up_to": 2,
+                    "price_euro": 5.95
+                },
+                {
+                    "up_to": 3,
+                    "price_euro": 6.80
+                },
+                {
+                    "up_to": 5,
+                    "price_euro": 8
+                },
+                {
+                    "up_to": 7,
+                    "price_euro": 10.50
+                },
+                {
+                    "up_to": 10,
+                    "price_euro": 12.75
+                },
+                {
+                    "up_to": 15,
+                    "price_euro": 15.35
+                },
+                {
+                    "up_to": 30,
+                    "price_euro": 19.10
+                }
+            ]
+        },
+        {
+            "name": "Mondial Relay - Relay delivery Zone 2",
+            "delivery_time_in_days": 5,
+            "delivery_type": 1,
+            "countries": [
+                "ESP"
+            ],
+            "prices": [
+                {
+                    "up_to": 0.5,
+                    "price_euro": 8.40
+                },
+                {
+                    "up_to": 1,
+                    "price_euro": 9
+                },
+                {
+                    "up_to": 2,
+                    "price_euro": 9.80
+                },
+                {
+                    "up_to": 3,
+                    "price_euro": 10.50
+                },
+                {
+                    "up_to": 5,
+                    "price_euro": 12.80
+                },
+                {
+                    "up_to": 7,
+                    "price_euro": 15.20
+                },
+                {
+                    "up_to": 10,
+                    "price_euro": 17.40
+                },
+                {
+                    "up_to": 15,
+                    "price_euro": 22.80
+                },
+                {
+                    "up_to": 30,
+                    "price_euro": 27.50
+                }
+            ]
+        },
+        {
+            "name": "Mondial Relay - Home delivery Zone 1",
+            "delivery_time_in_days": 3,
+            "delivery_type": 2,
+            "countries": [
+                "DEU",
+                "BEL",
+                "LUX"
+            ],
+            "prices": [
+                {
+                    "up_to": 0.5,
+                    "price_euro": 9.50
+                },
+                {
+                    "up_to": 1,
+                    "price_euro": 9.50
+                },
+                {
+                    "up_to": 2,
+                    "price_euro": 10.20
+                },
+                {
+                    "up_to": 3,
+                    "price_euro": 10.90
+                },
+                {
+                    "up_to": 5,
+                    "price_euro": 12.30
+                },
+                {
+                    "up_to": 7,
+                    "price_euro": 13.70
+                },
+                {
+                    "up_to": 10,
+                    "price_euro": 15.80
+                },
+                {
+                    "up_to": 15,
+                    "price_euro": 19.30
+                },
+                {
+                    "up_to": 30,
+                    "price_euro": 29.80
+                }
+            ]
+        },
+        {
+            "name": "Mondial Relay - Home delivery Zone 2",
+            "delivery_time_in_days": 5,
+            "delivery_type": 2,
+            "countries": [
+                "GBR",
+                "ESP"
+            ],
+            "prices": [
+                {
+                    "up_to": 0.5,
+                    "price_euro": 10.20
+                },
+                {
+                    "up_to": 1,
+                    "price_euro": 10.20
+                },
+                {
+                    "up_to": 2,
+                    "price_euro": 11.30
+                },
+                {
+                    "up_to": 3,
+                    "price_euro": 12.40
+                },
+                {
+                    "up_to": 5,
+                    "price_euro": 14.60
+                },
+                {
+                    "up_to": 7,
+                    "price_euro": 16.80
+                },
+                {
+                    "up_to": 10,
+                    "price_euro": 20.10
+                },
+                {
+                    "up_to": 15,
+                    "price_euro": 25.60
+                },
+                {
+                    "up_to": 30,
+                    "price_euro": 36.60
+                }
+            ]
+        },
+        {
+            "name": "Mondial Relay - Home delivery Zone 3",
+            "delivery_time_in_days": 6,
+            "delivery_type": 2,
+            "countries": [
+                "ITA",
+                "PRT",
+                "AUT"
+            ],
+            "prices": [
+                {
+                    "up_to": 0.5,
+                    "price_euro": 11.20
+                },
+                {
+                    "up_to": 1,
+                    "price_euro": 11.20
+                },
+                {
+                    "up_to": 2,
+                    "price_euro": 12.30
+                },
+                {
+                    "up_to": 3,
+                    "price_euro": 13.40
+                },
+                {
+                    "up_to": 5,
+                    "price_euro": 15.60
+                },
+                {
+                    "up_to": 7,
+                    "price_euro": 17.80
+                },
+                {
+                    "up_to": 10,
+                    "price_euro": 21.10
+                },
+                {
+                    "up_to": 15,
+                    "price_euro": 26.60
+                },
+                {
+                    "up_to": 30,
+                    "price_euro": 37.60
+                }
+            ]
+        }
+    ],
+    "insurances": [
+        {
+            "level": 1,
+            "value": 50,
+            "price_with_tax_euro": 2
+        },
+        {
+            "level": 2,
+            "value": 125,
+            "price_with_tax_euro": 3.50
+        },
+        {
+            "level": 3,
+            "value": 250,
+            "price_with_tax_euro": 5
+        },
+        {
+            "level": 4,
+            "value": 375,
+            "price_with_tax_euro": 6.50
+        },
+        {
+            "level": 5,
+            "value": 500,
+            "price_with_tax_euro": 8
+        }
+    ]
+}

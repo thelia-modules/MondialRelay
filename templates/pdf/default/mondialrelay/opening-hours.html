@@ -1,0 +1,30 @@
+{strip}
+    {loop type="mondialrelay.selected-pickup-point" name="avec-pickup" order_id=$order_id}
+        {if count($OPENINGS) > 0}
+            <div class="opening hours">
+                <p>{intl l="Pickup relay opening hours:" d="mondialrelay.pdf.default"}</p>
+                <table>
+                    <col style="padding: 1mm; border-bottom: 1px solid #ccc;" />
+                    <col style="padding: 1mm; border-bottom: 1px solid #ccc;" />
+                    <col style="padding: 1mm; border-bottom: 1px solid #ccc;" />
+    
+                    {foreach $OPENINGS as $opening}
+                    <tr>
+                        <td><b>{$opening.day}</b></td>
+                        {if $opening.opening_time_1}
+                            <td>{$opening.opening_time_1} - {$opening.closing_time_1}</td>
+                        {else}
+                            <td>&nbsp;</td>
+                        {/if}
+                        {if $opening.opening_time_2}
+                            <td>{$opening.opening_time_2} - {$opening.closing_time_2}</td>
+                        {else}
+                            <td>&nbsp;</td>
+                        {/if}
+                    </tr>
+                {/foreach}
+                </table>
+            </div>
+        {/if}
+    {/loop}
+{/strip}

@@ -1,0 +1,344 @@
+<script type="text/html" id="mondialrelay_ui">
+    <td colspan="3">
+        <input type="hidden" name="mondial-relay-selected-delivery-mode" value="none">
+        
+        {$withHome = false}
+        {loop type="mondialrelay.delivery-price" name="home-prices" mode="home" country_id=$country state_id=$state}
+            {$withHome = true}
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="mondialrelay_home">
+                        {form name="thelia.order.delivery"}
+                            {form_field field='delivery-module'}
+                            <label for="delivery-method_{$module_id}_home">
+                                <input type="radio" data-mondial-relay-delivery-mode="home" name="{$name}" id="delivery-method_{$module_id}_home" value="{$module_id}">
+                                <strong>{intl d="mondialrelay.fo.default" l="Mondial Relay home delivery"}</strong>
+                                <br>
+                                <span class="help-block">
+                                    {intl l="Expected delivery date: %delivery_date" delivery_date={format_date date=$DELIVERY_DATE output="date"} d="mondialrelay.fo.default" }
+                                </span>
+                            </label>
+                            {/form_field}
+                        {/form}
+                    </label>
+                </div>
+    
+                <div class="col-sm-4 hidden-xs text-center">
+                    {loop type="image" name="deliveryspicture" source="module" source_id=$module_id force_return="true" width="100" height="72"}
+                        <img src="{$IMAGE_URL nofilter}" alt="{$TITLE}">
+                    {/loop}
+                </div>
+    
+                <div class="col-sm-4">
+                    <div class="price text-right">
+                        {format_money number=$PRICE symbol={currency attr='symbol'}}
+                    </div>
+                </div>
+            </div>
+        {/loop}
+    
+        {$withRelay = false}
+        
+        {loop type="mondialrelay.delivery-price" name="relay-prices" mode="relay" country_id=$country state_id=$state}
+            <div {if $withHome}class="pickup-home-separator"{/if}></div>
+            
+            {$withRelay = true}
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="mondialrelay_pickup">
+                        {form name="thelia.order.delivery"}
+                            {form_field field='delivery-module'}
+                            <label for="delivery-method_{$module_id}_pickup">
+                                <input type="radio" data-mondial-relay-delivery-mode="pickup" name="{$name}" id="delivery-method_{$module_id}_pickup" value="{$module_id}">
+                                <strong>{intl d="mondialrelay.fo.default" l="Mondial Relay pickup delivery"}</strong>
+                                <br>
+                                <span class="help-block">
+                                    {intl l="Expected delivery date: %delivery_date" delivery_date={format_date date=$DELIVERY_DATE output="date"} d="mondialrelay.fo.default" }
+                                </span>
+                            </label>
+                            {/form_field}
+                        {/form}
+                    </label>
+                </div>
+    
+                <div class="col-sm-4 hidden-xs text-center">
+                    {loop type="image" name="deliveryspicture" source="module" source_id=$module_id force_return="true" width="100" height="72"}
+                        <img src="{$IMAGE_URL nofilter}" alt="{$TITLE}">
+                    {/loop}
+                </div>
+    
+                <div class="col-sm-4">
+                    <div class="price text-right">
+                        {format_money number=$PRICE symbol={currency attr='symbol'}}
+                    </div>
+                </div>
+            </div>
+        
+            <div id="mondial-relay-pickup">
+                <div class="row">
+                    <div class="location-form clearfix">
+                        <div class="col-md-12">
+                            <h4>{intl d="mondialrelay.fo.default" l="Find a pickup relay around you"}</h4>
+                        </div>
+
+                        {loop type="address" name="adr" id=$address_id}
+                            <div class="col-sm-2">
+                                <input type="text" required class="form-control" id="mondial_relay_zipcode" name="mondial_relay_zipcode" placeholder="{intl l="Zip code" d="mondialrelay.fo.default"}" value="{$ZIPCODE}">
+                            </div>
+                        
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="mondial_relay_city" name="mondial_relay_city" placeholder="{intl l="City" d="mondialrelay.fo.default"}" value="{$CITY}">
+                            </div>
+                        
+                            <div class="col-sm-3">
+                                <select class="form-control" id="mondial_relay_country_id" name="mondial_relay_country_id">
+                                    {loop type="country" name="cntry"}
+                                        <option value="{$ID}"{if $COUNTRY == $ID} selected{/if}>{$TITLE}</option>
+                                    {/loop}
+                                </select>
+                            </div>
+                        
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="mondial_relay_radius" name="mondial_relay_radius" placeholder="{intl l="Search radius" d="mondialrelay.fo.default"}" value="10">
+                                    <span class="input-group-addon">{intl d="mondialrelay.fo.default" l="km"}</span>
+                                </div>
+                            </div>
+                        
+                            <div class="col-sm-1">
+                                <button id="search-mr-relay" class="form-submit-button btn btn-block btn-default" type="button">{intl d="mondialrelay.fo.default" l="Find"}</button>
+                            </div>
+                        {/loop}
+                    </div>
+                </div>
+            
+                <div class="row">
+                    <div class="col-md-5">
+                        <div id="relay_info">
+                            <p>{intl d="mondialrelay.fo.default" l="Loading..."}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-7">
+                        <div id="mondialrelay_map" style="width: 100%; height: 450px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/loop}
+    </td>
+</script>
+
+<script>
+    $("#delivery-module-{$module_id}").html($('#mondialrelay_ui').html());
+
+    jQuery.fn.scrollTo = function(elem, speed) {
+        $(this).animate({
+            scrollTop:  $(this).scrollTop() - $(this).offset().top + $(elem).offset().top
+        }, speed === undefined ? 1000 : speed);
+        return this;
+    };
+    
+{if $withRelay}
+    var MRData = {
+        markers: [],
+        map: null,
+        geocoder: null,
+        bounds: null,
+        pinImages: [
+            {for $idx = 1 to 30}
+            "{image file="mondialrelay/assets/img/pins/pointsrelais_pin_{$idx}.png" source="MondialRelay"}"{if $idx < 30},{/if}
+            {/for}
+        ]
+    };
+
+    function loadScript() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://maps.googleapis.com/maps/api/js'
+            + '?callback=mondialRelaySetup'
+            + '&key={module_config module="MondialRelay" key="google_maps_api_key" locale="en_US"}';
+        document.body.appendChild(script);
+    }
+    
+    function loadRelayMap() {
+        var $relayInfo = $('#relay_info');
+        
+        MRData.bounds = new google.maps.LatLngBounds();
+
+        for(var idx = 0; idx < MRData.markers.length; idx++) {
+            MRData.markers[idx].setMap(null);
+        }
+        
+        MRData.markers.length = 0;
+    
+        $relayInfo.html('');
+    
+        $.ajax({
+            url: "{url path="MondialRelay/relay-map"}",
+            data : {
+                country_id: $('#mondial_relay_country_id').val(),
+                city: $('#mondial_relay_city').val(),
+                zipcode: $('#mondial_relay_zipcode').val(),
+                radius: $('#mondial_relay_radius').val()
+            },
+            success: function(data) {
+                var html, item, opening, marker;
+    
+                if (data.length === 0) {
+                    html = '<div class="alert alert-danger">{intl d="mondialrelay.fo.default" l="No pickup relays were found for this address." js=1}</div>';
+                } else {
+                    html = '<table class="pickup-points">';
+    
+                    // Build point data and map points from json data
+                    for (var idx = 0; idx < data.length; idx++) {
+                        item = data[idx];
+        
+                        marker = new google.maps.Marker({
+                            map: MRData.map,
+                            position: new google.maps.LatLng(item.latitude, item.longitude),
+                            title: (idx + 1) + ' : ' + item.name,
+                            icon: MRData.pinImages[idx],
+                            relay_id: item.id
+                        });
+        
+                        google.maps.event.addListener(marker, 'click', function () {
+                            $relayInfo.scrollTo("#pickup-point-" + this.relay_id);
+                        });
+        
+                        MRData.bounds.extend(marker.getPosition());
+                        MRData.markers.push(marker);
+        
+                        html +=
+                            '<tr class="pickup-point" data-pickup-id="' + item.id + '" id="pickup-point-' + item.id + '">'
+                            + '<td>'
+                            + '    <label for="" class="name">'
+                            + '         <span class="numero">' + (idx + 1) + '</span> ' + item.name + ' (' + item.distance_km + ' km)'
+                            + '    </label>'
+                            + '    <div class="address">' + item.address + '</div>'
+                            + '    <div class="zipcode">' + item.zipcode + ' ' + item.city + '</div>'
+                        ;
+        
+                        if (item.openings.length > 0) {
+                            html += '<table class="opening-hours">';
+            
+                            for (var jdx = 0; jdx < item.openings.length; jdx++) {
+                                opening = item.openings[jdx];
+                
+                                html += '<tr>';
+                
+                                html += '<td class="day">' + opening.day + '</td> ';
+                
+                                if (opening.opening_time_1 !== undefined) {
+                                    html += '<td>' + opening.opening_time_1 + ' - ' + opening.closing_time_1 + '</td>';
+                                }
+                
+                                if (opening.opening_time_2 !== undefined) {
+                                    html += '<td>' + opening.opening_time_2 + ' - ' + opening.closing_time_2 + '</td>';
+                                }
+                
+                                html += '</tr>';
+                            }
+            
+                            html += '</table>';
+                        }
+        
+                        html += '</td>';
+        
+                        html += '<td><input type="radio" name="mondialrelay_relay" value="' + item.id + '"></td>';
+        
+                        html += '</tr>';
+                    }
+    
+                    html += '</table>';
+                }
+                
+                $relayInfo.html(html);
+    
+                // View all markers
+                MRData.map.fitBounds(MRData.bounds);
+            },
+            error: function() {
+                alert("{intl d="mondialrelay.fo.default" l="Oops, something goes wrong, please try again." js=1}")
+            }
+        });
+    }
+
+
+    if (typeof(google) === 'undefined') {
+        loadScript();
+    } else {
+        mondialRelaySetup();
+    }
+
+    function mondialRelaySetup() {
+        // Google Map
+        var MRData_mapOptions = {
+            zoom: 13,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+    
+        MRData.map = new google.maps.Map(document.getElementById('mondialrelay_map'), MRData_mapOptions);
+        MRData.geocoder = new google.maps.Geocoder();
+        
+        // Center map on the current customer address
+        {loop type="address" name="adr" id=$address_id}
+            var MRDataAddress = [];
+            MRDataAddress['address'] = "{$ADDRESS1|replace:'"':'\\"'}, {$ZIPCODE} {$CITY|replace:'"':'\\"'}";
+        
+            MRData.geocoder.geocode(MRDataAddress, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    MRData.map.setCenter(results[0].geometry.location);
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()),
+                        map: MRData.map,
+                        icon: "{image file='mondialrelay/assets/img/maison.png' source='MondialRelay'}"
+                    });
+                } else {
+                    // Sinon on met le centre de la map sur Clermont-Ferrand ;)
+                    alert("{intl d="mondialrelay.fo.default" l="Current address can't be geolocated" js=1}");
+                    
+                    var myLatLng = new google.maps.LatLng(45.7789, 3.0782);
+                    MRData.map.setCenter(myLatLng);
+                    MRData.map.setZoom(3);
+                }
+            });
+        {/loop}
+        
+        loadRelayMap();
+    
+        $(document).on('click', '.pickup-point', function(ev) {
+            var pointId = $(this).data('pickup-id');
+            $('input[value='+pointId+']').prop("checked", true)
+        });
+    
+        $('#search-mr-relay').off().click(function(ev) {
+            loadRelayMap();
+        });
+    
+        $("#form-cart-delivery").off('submit').submit(function(ev) {
+            if ($('[data-mondial-relay-delivery-mode=pickup]').is(':checked')
+                &&
+                $('input[name=mondialrelay_relay]:checked').length === 0) {
+                alert("{intl d="mondialrelay.fo.default" l="Please select a pickup relay." js=1}");
+                ev.preventDefault();
+            }
+        });
+    }
+{/if}
+    
+    $('[data-mondial-relay-delivery-mode]').change(function() {
+        $('input[name=mondial-relay-selected-delivery-mode]').val($(this).data('mondial-relay-delivery-mode'));
+    });
+    
+    // Hide / Show pickeup selection UI
+    $('input[type=radio]').click(function() {
+        if ($('[data-mondial-relay-delivery-mode=pickup]').is(':checked')) {
+            $('#mondial-relay-pickup').slideDown('fast');
+            // Show a descent map
+            MRData.map.fitBounds(MRData.bounds);
+        } else {
+            $('#mondial-relay-pickup').slideUp('fast');
+        }
+    });
+</script>

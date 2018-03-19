@@ -1,0 +1,13 @@
+{strip}
+    {loop type="mondialrelay.selected-pickup-point" name="avec-pickup" order_id=$order_id}
+        {intl l="Mondial Relay pickup #%num" num=$ID d="mondialrelay.email.default"}<br>
+        {format_address
+            country_code=$COUNTRY
+            locality=$CITY
+            postal_code=$ZIPCODE
+            address_line1=$ADDRESS
+            organization=$NAME
+            html=$html_mode
+        }
+    {/loop}
+{/strip}

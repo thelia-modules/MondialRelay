@@ -1,0 +1,43 @@
+[
+    {
+        "name": "xaviborja/php-mondialrelay-api",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/xaviborja/php-mondialrelay-api.git",
+            "reference": "b57f7da5f3f2ce983c8bea3d8239b7fdbe7ebcbf"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/xaviborja/php-mondialrelay-api/zipball/b57f7da5f3f2ce983c8bea3d8239b7fdbe7ebcbf",
+            "reference": "b57f7da5f3f2ce983c8bea3d8239b7fdbe7ebcbf",
+            "shasum": ""
+        },
+        "require": {
+            "xaviborja/php-mondialrelay-api": "dev-master"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^5.0"
+        },
+        "time": "2017-06-21T12:22:06+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "MondialRelay\\": "src/MondialRelay/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Xavier Borja",
+                "email": "xavibm86@gmail.com"
+            }
+        ],
+        "description": "A PHP library for dealing with Mondial Relay API (http://api.mondialrelay.com)"
+    }
+]

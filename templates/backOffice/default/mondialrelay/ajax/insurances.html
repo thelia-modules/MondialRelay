@@ -1,0 +1,98 @@
+{form name="mondialrelay.insurances_update_form"}
+<form action="{url path="/admin/module/MondialRelay/insurances/save"}" {form_enctype form=$form} method="post" data-ajax-target="#insurances-form-container">
+    {form_hidden_fields form=$form}
+    
+    {if $form_error}<div class="alert alert-danger">{$form_error_message}</div>{/if}
+    
+    <table class="table table-condensed table-striped">
+        <thead>
+        <tr>
+            <th>{intl l='Cart value' d='mondialrelay.bo.default'}</th>
+            <th>{intl l='Insurance price with tax' d='mondialrelay.bo.default'}</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        {loop type="mondialrelay.insurances" name="insurances"}
+        <tr>
+            <td>
+                {form_field field="max_value"}
+                    <div class="input-group">
+                        <input type="text" {form_field_attributes field="max_value" value_key=$ID value=$MAX_VALUE|string_format:"%.2f"}>
+                        <span class="input-group-addon">{currency attr="symbol"}</span>
+                    </div>
+                {/form_field}
+            </td>
+            
+            <td>
+                {form_field field="price_with_tax"}
+                    <div class="input-group">
+                        <input type="text" {form_field_attributes field="price_with_tax" value_key=$ID value=$PRICE|string_format:"%.2f"}>
+                        <span class="input-group-addon">{currency attr="symbol"}</span>
+                    </div>
+                {/form_field}
+            </td>
+            
+            <td>
+                <a href="{url path="/admin/module/MondialRelay/insurances/delete/$ID"}" data-ajax-target="#insurances-form-container" class="btn btn-danger" title="{intl l='Delete this insurance' d='mondialrelay.bo.default'}">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </a>
+            </td>
+        </tr>
+        {/loop}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="99" class="text-right">
+                <button class="btn btn-primary" type="submit">
+                    <i class="glyphicon glyphicon-ok"></i>
+                    {intl l='Save changes' d='mondialrelay.bo.default'}
+                </button>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</form>
+{/form}
+
+{form name="mondialrelay.insurance_create_form"}
+<form action="{url path="/admin/module/MondialRelay/insurances/create"}" {form_enctype form=$form} method="post" data-ajax-target="#insurances-form-container">
+    {form_hidden_fields form=$form}
+    
+    {if $form_error}<div class="alert alert-danger">{$form_error_message}</div>{/if}
+    
+    <table class="table table-condensed table-striped">
+        <tbody>
+        <tr>
+            <th colspan="99">{intl l='Add a new insurance' d='mondialrelay.bo.default'}</th>
+        </tr>
+        <tr>
+            <td>
+                {form_field field="max_value"}
+                    <div class="input-group">
+                        <input type="text" {form_field_attributes field="max_value"}>
+                        <span class="input-group-addon">{currency attr="symbol"}</span>
+                    </div>
+                {/form_field}
+            </td>
+    
+            <td>
+                {form_field field="price_with_tax"}
+                    <div class="input-group">
+                        <input type="text" {form_field_attributes field="price_with_tax"}>
+                        <span class="input-group-addon">{currency attr="symbol"}</span>
+                    </div>
+                {/form_field}
+            </td>
+    
+            <td>
+                <button type="submit" class="btn btn-primary" title="{intl l='Add new insurance' d='mondialrelay.bo.default'}"><i class="glyphicon glyphicon-plus"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+{/form}
+
+{include file="mondialrelay/includes/error-dialog.html"}

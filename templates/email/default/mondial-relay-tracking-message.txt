@@ -1,0 +1,11 @@
+{default_translation_domain domain='mondialrelay.email.default'}
+{default_locale locale={$locale}}
+{loop type="order" name="order" id=$order_id}
+{loop type="customer" name="customer.order" current=false id=$CUSTOMER backend_context="1"}
+{intl l="Dear %first %last" last=$LASTNAME first=$FIRSTNAME},<br>
+{/loop}
+{intl l="Your order %order_ref has just been shipped from our store. The tracking number for this order is %tracking_ref. Tracking data is available at this address: https://www.mondialrelay.fr/suivi-de-colis" order_ref=$REF tracking_ref=$DELIVERY_REF}<br>
+{intl l="Details about this order are available in your customer account:  %account_url." account_url={url path="/account"}}<br>
+{intl l="See you soon at %store at the following address: %url" url={navigate to='index'} store={config key="store_name"}}<br>
+{intl l="The %store team." store={config key="store_name"}}
+{/loop}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+    <loops>
+        <loop name="mondialrelay.prices" class="MondialRelay\Loop\Prices" />
+        <loop name="mondialrelay.area-attributes" class="MondialRelay\Loop\AreaAttributes" />
+        <loop name="mondialrelay.insurances" class="MondialRelay\Loop\Insurances" />
+
+        <loop name="mondialrelay.delivery-price" class="MondialRelay\Loop\DeliveryPrice" />
+        <loop name="mondialrelay.pickup-points" class="MondialRelay\Loop\PickupPoints" />
+        <loop name="mondialrelay.selected-pickup-point" class="MondialRelay\Loop\SelectedPickupPoint" />
+    </loops>
+
+    <forms>
+        <form name="mondialrelay.settings_form" class="MondialRelay\Form\SettingsForm" />
+
+        <form name="mondialrelay.area_attributes_update_form" class="MondialRelay\Form\PriceAttributesUpdateForm" />
+
+        <form name="mondialrelay.price_form" class="MondialRelay\Form\PriceCreateForm" />
+        <form name="mondialrelay.prices_update_form" class="MondialRelay\Form\PricesUpdateForm" />
+
+        <form name="mondialrelay.insurances_update_form" class="MondialRelay\Form\InsurancesUpdateForm" />
+        <form name="mondialrelay.insurance_create_form" class="MondialRelay\Form\InsuranceCreateForm" />
+    </forms>
+
+    <services>
+        <service id="mondialrelay.delivery.service" class="MondialRelay\EventListeners\DeliveryListener">
+            <argument type="service" id="request_stack" />
+            <tag name="kernel.event_subscriber"/>
+        </service>
+        <service id="mondialrelay.mailing.service" class="MondialRelay\EventListeners\SendDeliveryEmail">
+            <argument type="service" id="mailer" />
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+    </services>
+
+    <hooks>
+        <hook id="mondialrelay.admin.hookmanager" class="MondialRelay\Hook\AdminHookManager">
+            <tag name="hook.event_listener" event="module.configuration" type="back" method="onModuleConfigure" />
+            <tag name="hook.event_listener" event="module.config-js" type="back" method="onModuleConfigureJs" />
+            <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools" />
+        </hook>
+
+        <hook id="mondialrelay.front.hookmanager" class="MondialRelay\Hook\FrontHookManager">
+            <tag name="hook.event_listener" event="order-delivery.extra" type="front" method="onOrderDeliveryExtra" />
+            <tag name="hook.event_listener" event="order-delivery.stylesheet" type="front" templates="css:mondialrelay/assets/css/styles.css" />
+            <tag name="hook.event_listener" event="order-invoice.delivery-address" type="front" templates="render:mondialrelay/delivery-address.html"/>
+            <tag name="hook.event_listener" event="account-order.delivery-address" type="front" method="onAccountOrderDeliveryAddress"/>
+        </hook>
+
+        <hook id="mondialrelay.email.hookmanager" class="MondialRelay\Hook\EmailHookManager">
+            <tag name="hook.event_listener" event="email-html.order-confirmation.delivery-address" type="email" method="onDeliveryAddressHtml"/>
+            <tag name="hook.event_listener" event="email-txt.order-confirmation.delivery-address" type="email" method="onDeliveryAddressText"/>
+            <tag name="hook.event_listener" event="email-html.order-notification.delivery-address" type="email" method="onDeliveryAddressHtml"/>
+            <tag name="hook.event_listener" event="email-txt.order-notification.delivery-address" type="email" method="onDeliveryAddressText"/>
+
+            <tag name="hook.event_listener" event="email-html.order-confirmation.after-products" type="email" method="onAfterProductsHtml"/>
+            <tag name="hook.event_listener" event="email-txt.order-confirmation.after-products" type="email" method="onAfterProductsText"/>
+            <tag name="hook.event_listener" event="email-html.order-notification.after-products" type="email" method="onAfterProductsHtml"/>
+            <tag name="hook.event_listener" event="email-txt.order-notification.after-products" type="email" method="onAfterProductsText"/>
+        </hook>
+
+        <hook id="mondialrelay.pdf.hookmanager" class="MondialRelay\Hook\PdfHookManager">
+            <tag name="hook.event_listener" event="delivery.delivery-address" type="pdf" method="onDeliveryAddress"/>
+            <tag name="hook.event_listener" event="invoice.delivery-address" type="pdf" method="onDeliveryAddress"/>
+
+            <tag name="hook.event_listener" event="delivery.after-delivery-module" type="pdf" method="onAfterDeliveryModule"/>
+            <tag name="hook.event_listener" event="invoice.after-delivery-module" type="pdf" method="onAfterDeliveryModule"/>
+
+        </hook>
+    </hooks>
+</config>

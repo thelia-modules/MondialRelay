@@ -1,0 +1,66 @@
+.location-form {
+    margin-bottom: 20px;
+}
+
+.location-form button {
+    padding: 6px 12px !important;
+}
+
+#relay_info {
+    height: 450px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+}
+
+#relay_info table {
+    margin: 0;
+    width: 100%;
+}
+
+#relay_info table.pickup-points > tbody > tr > td {
+    border-bottom: 1px solid #ccc;
+    margin: 0;
+    padding: 10px;
+    cursor: pointer;
+}
+#relay_info table.pickup-points > tbody > tr:hover {
+    background-color: #f5f5f5;
+}
+
+#relay_info table.pickup-points > tbody > tr > td .name {
+    font-weight: bold;
+}
+
+#relay_info table.pickup-points > tbody > tr > td .name .numero {
+    display: inline-block;
+    border-radius: 2px;
+    background-color:#e64b62;
+    color: #fff;
+    padding: 0 5px;
+    margin-right: 5px;
+}
+
+#relay_info table.opening-hours {
+    width: 100%;
+}
+
+#relay_info table.opening-hours tr td {
+    font-size: 90%;
+    padding: 3px;
+}
+#relay_info table.opening-hours tr:nth-child(even) {
+    background-color:#f5f5f5;
+}
+
+#mondial-relay-pickup {
+    display: none;
+}
+
+.pickup-home-separator {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 30px;
+    margin-left: -30px;
+    margin-right: -30px;
+}
+
