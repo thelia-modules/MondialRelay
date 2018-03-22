@@ -37,6 +37,9 @@ class FindRelayEvent extends ActionEvent
     /** @var string */
     protected $numPointRelais = '';
 
+    /** @var bool  */
+    protected $error = '';
+
     /**
      * FindRelayEvent constructor.
      * @param int $countryId
@@ -118,5 +121,31 @@ class FindRelayEvent extends ActionEvent
     {
         $this->numPointRelais = $numPointRelais;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasError()
+    {
+        return ! empty($this->error);
+    }
+
+    /**
+     * @param string $error
+     * @return $this
+     */
+    public function setError($error)
+    {
+        $this->error = $error;
+        return $this;
+    }
+
+    /**
+     * @return string $error
+     */
+    public function getError()
+    {
+        return $this->error;
     }
 }

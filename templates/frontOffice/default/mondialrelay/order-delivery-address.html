@@ -1,6 +1,6 @@
 {strip}
     {loop type="mondialrelay.selected-pickup-point" name="avec-pickup" order_id=$order_id}
-        {intl l="Mondial Relay pickup #%num" num=$ID d="mondialrelay.fo.default"}<br>
+        {intl l="Mondial Relay pickup location #%num" num=$ID d="mondialrelay.fo.default"}<br>
         {format_address
             country_code=$COUNTRY
             locality=$CITY
@@ -10,7 +10,7 @@
         }
         {if count($OPENINGS) > 0}
         <div class="opening hours">
-            <h4>{intl l="Pickup relay opening hours" d='mondialrelay.fo.default'}</h4>
+            <h4>{intl l="Pickup location opening hours" d='mondialrelay.fo.default'}</h4>
             <table class="table table-condensed table-stripped">
             {foreach $OPENINGS as $opening}
                 <tr>

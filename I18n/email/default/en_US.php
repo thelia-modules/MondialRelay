@@ -4,7 +4,7 @@ return array(
     'Dear %first %last' => 'Dear %first %last',
     'Details about this order are available <a href="%account_url">in your customer account</a>.' => 'Details about this order are available <a href="%account_url">in your customer account</a>.',
     'Details about this order are available in your customer account:  %account_url.' => 'Details about this order are available in your customer account:  %account_url.',
-    'Mondial Relay pickup #%num' => 'Mondial Relay pickup #%num',
+    'Mondial Relay pickup location #%num' => 'Mondial Relay pickup location #%num',
     'Pickup relay opening hours:' => 'Pickup relay opening hours:',
     'See you soon at %store at the following address: %url' => 'See you soon at %store at the following address: %url',
     'See you soon at <a href="%url">%store</a>' => 'See you soon at <a href="%url">%store</a>',

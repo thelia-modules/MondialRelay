@@ -35,6 +35,10 @@ class MapManagement extends BaseFrontController
 
         $this->getDispatcher()->dispatch(MondialRelayEvents::FIND_RELAYS, $event);
 
-        return new JsonResponse($event->getPoints());
+
+        return new JsonResponse([
+            'points' => $event->getPoints(),
+            'error' => $event->getError()
+        ]);
     }
 }

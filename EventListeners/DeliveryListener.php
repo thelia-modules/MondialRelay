@@ -226,7 +226,13 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
                 'RayonRecherche' => $event->getSearchRadius()
             ];
 
-            $points = $apiClient->findDeliveryPoints($requestParams);
+            try {
+                $points = $apiClient->findDeliveryPoints($requestParams);
+            } catch (\Exception $ex) {
+                $points = [];
+
+                $event->setError($ex->getMessage());
+            }
         }
 
         $normalizedPoints = [];
@@ -268,12 +274,15 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
                 if ($horaire->openingTime1() != '0000' && $horaire->openingTime2() !== '0000') {
                     $data = [ 'day' => $days[$horaire->day()]];
 
-                    if ($horaire->openingTime1() != '0000') {
+                    $o1 = $horaire->openingTime1();
+                    $o2 = $horaire->openingTime2();
+
+                    if (! empty($o1) && $o1 != '0000') {
                         $data['opening_time_1'] = $this->makeHoraire($horaire->openingTime1());
                         $data['closing_time_1'] = $this->makeHoraire($horaire->closingTime1());
                     }
 
-                    if ($horaire->openingTime2() != '0000') {
+                    if (! empty($o2) && $o2 != '0000') {
                         $data['opening_time_2'] = $this->makeHoraire($horaire->openingTime2());
                         $data['closing_time_2'] = $this->makeHoraire($horaire->closingTime2());
                     }

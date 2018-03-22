@@ -50,7 +50,7 @@
                             {form_field field='delivery-module'}
                             <label for="delivery-method_{$module_id}_pickup">
                                 <input type="radio" data-mondial-relay-delivery-mode="pickup" name="{$name}" id="delivery-method_{$module_id}_pickup" value="{$module_id}">
-                                <strong>{intl d="mondialrelay.fo.default" l="Mondial Relay pickup delivery"}</strong>
+                                <strong>{intl d="mondialrelay.fo.default" l="Mondial Relay pickup location"}</strong>
                                 <br>
                                 <span class="help-block">
                                     {intl l="Expected delivery date: %delivery_date" delivery_date={format_date date=$DELIVERY_DATE output="date"} d="mondialrelay.fo.default" }
@@ -78,7 +78,7 @@
                 <div class="row">
                     <div class="location-form clearfix">
                         <div class="col-md-12">
-                            <h4>{intl d="mondialrelay.fo.default" l="Find a pickup relay around you"}</h4>
+                            <h4>{intl d="mondialrelay.fo.default" l="Find a pickup location around you"}</h4>
                         </div>
 
                         {loop type="address" name="adr" id=$address_id}
@@ -185,14 +185,17 @@
             success: function(data) {
                 var html, item, opening, marker;
     
-                if (data.length === 0) {
-                    html = '<div class="alert alert-danger">{intl d="mondialrelay.fo.default" l="No pickup relays were found for this address." js=1}</div>';
+                if (data.error !== '') {
+                    var errMsg = "{intl d="mondialrelay.fo.default" l="Sorry, we failed to get pickup locations. Error is : __ERR__." js=1}";
+                    alert(errMsg.replace('__ERR__', data.error));
+                } else if (data.points.length === 0) {
+                    html = '<div class="alert alert-danger">{intl d="mondialrelay.fo.default" l="No pickup locations were found for this address." js=1}</div>';
                 } else {
                     html = '<table class="pickup-points">';
     
                     // Build point data and map points from json data
-                    for (var idx = 0; idx < data.length; idx++) {
-                        item = data[idx];
+                    for (var idx = 0; idx < data.points.length; idx++) {
+                        item = data.points[idx];
         
                         marker = new google.maps.Marker({
                             map: MRData.map,
@@ -320,7 +323,7 @@
             if ($('[data-mondial-relay-delivery-mode=pickup]').is(':checked')
                 &&
                 $('input[name=mondialrelay_relay]:checked').length === 0) {
-                alert("{intl d="mondialrelay.fo.default" l="Please select a pickup relay." js=1}");
+                alert("{intl d="mondialrelay.fo.default" l="Please select a pickup location." js=1}");
                 ev.preventDefault();
             }
         });
