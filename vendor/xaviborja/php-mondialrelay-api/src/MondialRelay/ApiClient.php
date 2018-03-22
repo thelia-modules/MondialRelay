@@ -20,19 +20,6 @@ class ApiClient
         $this->client = $soapClient;
     }
 
-    protected function getStatLabels()
-    {
-        static $labels = false;
-
-        if (false === $labels) {
-            $request = $this->decorateRequest([
-                'Langue' => 'FR'
-            ]);
-
-            $labels = $this->client->WSI2_STAT_Labels($request);
-        }
-    }
-
     public function findDeliveryPoints(array $request)
     {
         try {
@@ -95,8 +82,6 @@ class ApiClient
                 'STAT_ID' => $result->{$method}->STAT,
                 'Langue' => 'FR',
             ]);
-            $this->getStatLabels();
-
             $error_response = $this->client->WSI2_STAT_Label($request);
             throw new \InvalidArgumentException($error_response->WSI2_STAT_LabelResult);
         }
