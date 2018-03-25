@@ -103,70 +103,69 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
 
         $weight = $session->getSessionCart($dispatcher)->getWeight();
 
-        $moduleModel = ModuleQuery::create()->findOneByCode(MondialRelay::getModuleCode());
+        if ($weight <= MondialRelay::MAX_WEIGHT_KG) {
+            $moduleModel = ModuleQuery::create()->findOneByCode(MondialRelay::getModuleCode());
 
-        // Find all allowed delivery types for the destination country
-        $countryHasRelay = $countryHasHome = false;
+            // Find all allowed delivery types for the destination country
+            $countryHasRelay = $countryHasHome = false;
 
-        $countryInAreaList = CountryAreaQuery::findByCountryAndState($event->getCountry(), $event->getState());
+            $countryInAreaList = CountryAreaQuery::findByCountryAndState($event->getCountry(), $event->getState());
 
-        $price = PHP_INT_MAX;
-        $deliveryTime = 0;
+            $price = PHP_INT_MAX;
 
-        /** @var CountryArea $countryInArea */
-        foreach ($countryInAreaList as $countryInArea) {
-            $areas = AreaDeliveryModuleQuery::create()->filterByAreaId($countryInArea->getAreaId())
-                ->filterByModule($moduleModel)
-                ->find()
-            ;
+            /** @var CountryArea $countryInArea */
+            foreach ($countryInAreaList as $countryInArea) {
+                $areas = AreaDeliveryModuleQuery::create()->filterByAreaId($countryInArea->getAreaId())
+                    ->filterByModule($moduleModel)
+                    ->find();
 
-            /** @var AreaDeliveryModule $area */
-            foreach ($areas as $area) {
-                if (null !== $zoneConfig = MondialRelayZoneConfigurationQuery::create()->findOneByAreaId($area->getAreaId())) {
-                    $zoneDeliveryType = $zoneConfig->getDeliveryType();
+                /** @var AreaDeliveryModule $area */
+                foreach ($areas as $area) {
+                    if (null !== $zoneConfig = MondialRelayZoneConfigurationQuery::create()->findOneByAreaId($area->getAreaId())) {
+                        $zoneDeliveryType = $zoneConfig->getDeliveryType();
 
-                    switch ($zoneDeliveryType) {
-                        case MondialRelayZoneConfiguration::ALL_DELIVERY_TYPE:
-                            $countryHasRelay = $countryHasHome = true;
-                            break;
-                        case MondialRelayZoneConfiguration::HOME_DELIVERY_TYPE:
-                            $countryHasHome = true;
-                            break;
-                        case MondialRelayZoneConfiguration::RELAY_DELIVERY_TYPE:
-                            $countryHasRelay = true;
-                            break;
+                        switch ($zoneDeliveryType) {
+                            case MondialRelayZoneConfiguration::ALL_DELIVERY_TYPE:
+                                $countryHasRelay = $countryHasHome = true;
+                                break;
+                            case MondialRelayZoneConfiguration::HOME_DELIVERY_TYPE:
+                                $countryHasHome = true;
+                                break;
+                            case MondialRelayZoneConfiguration::RELAY_DELIVERY_TYPE:
+                                $countryHasRelay = true;
+                                break;
+                        }
                     }
-                }
 
-                // If the area delivery type matches the selected one, or if no zone is selected
-                if (null === $selectedDeliveryType || $zoneDeliveryType === $selectedDeliveryType) {
-                    // Check if we have a price slice
-                    if (null !== $deliveryPrice = MondialRelayDeliveryPriceQuery::create()
-                            ->filterByAreaId($area->getAreaId())
-                            ->filterByMaxWeight($weight, Criteria::GREATER_EQUAL)
-                            ->orderByMaxWeight(Criteria::ASC)
-                            ->findOne()) {
-                        $price = min($price, $deliveryPrice->getPriceWithTax());
+                    // If the area delivery type matches the selected one, or if no zone is selected
+                    if (null === $selectedDeliveryType || $zoneDeliveryType === $selectedDeliveryType) {
+                        // Check if we have a price slice
+                        if (null !== $deliveryPrice = MondialRelayDeliveryPriceQuery::create()
+                                ->filterByAreaId($area->getAreaId())
+                                ->filterByMaxWeight($weight, Criteria::GREATER_EQUAL)
+                                ->orderByMaxWeight(Criteria::ASC)
+                                ->findOne()) {
+                            $price = min($price, $deliveryPrice->getPriceWithTax());
 
-                        $deliveryDelay = $zoneConfig->getDeliveryTime();
+                            $deliveryDelay = $zoneConfig->getDeliveryTime();
+                        }
                     }
                 }
             }
-        }
 
-        $relayAllowed = MondialRelay::getConfigValue(MondialRelay::ALLOW_RELAY_DELIVERY, true);
-        $homeAllowed  = MondialRelay::getConfigValue(MondialRelay::ALLOW_HOME_DELIVERY, true);
+            $relayAllowed = MondialRelay::getConfigValue(MondialRelay::ALLOW_RELAY_DELIVERY, true);
+            $homeAllowed = MondialRelay::getConfigValue(MondialRelay::ALLOW_HOME_DELIVERY, true);
 
-        if (($countryHasHome && $homeAllowed) || ($countryHasRelay && $relayAllowed) && $price !== PHP_INT_MAX) {
-            // The module could be used !
-            $valid = true;
+            if (($countryHasHome && $homeAllowed) || ($countryHasRelay && $relayAllowed) && $price !== PHP_INT_MAX) {
+                // The module could be used !
+                $valid = true;
 
-            $deliveryDate = (new \DateTime())->add(new \DateInterval("P" . $deliveryDelay . "D"));
+                $deliveryDate = (new \DateTime())->add(new \DateInterval("P" . $deliveryDelay . "D"));
 
-            $event
-                ->setPostage($price)
-                ->setDeliveryDate($deliveryDate)
-                ;
+                $event
+                    ->setPostage($price)
+                    ->setDeliveryDate($deliveryDate);
+            }
         }
 
         $event->setValidModule($valid);

@@ -53,6 +53,8 @@ class MondialRelay extends AbstractDeliveryModule
 
     const TRACKING_MESSAGE_NAME = 'mondial-relay-tracking-message';
 
+    const MAX_WEIGHT_KG = 30;
+
     /**
      * This method is called by the Delivery  loop, to check if the current module has to be displayed to the customer.
      * Override it to implements your delivery rules/
