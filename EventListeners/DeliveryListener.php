@@ -101,7 +101,8 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
             $session->set(MondialRelay::SESSION_SELECTED_DELIVERY_TYPE, $selectedDeliveryType);
         }
 
-        $weight = $session->getSessionCart($dispatcher)->getWeight();
+        // Use the minimum weight if the cart is below this minimum.
+        $weight = max(MondialRelay::MIN_WEIGHT_KG, $session->getSessionCart($dispatcher)->getWeight());
 
         if ($weight <= MondialRelay::MAX_WEIGHT_KG) {
             $moduleModel = ModuleQuery::create()->findOneByCode(MondialRelay::getModuleCode());
