@@ -1,5 +1,5 @@
 {
-  "name": "your-vendor/mondial-relay-module",
+  "name": "thelia/mondial-relay-module",
   "license": "LGPL-3.0-or-later",
   "type": "thelia-module",
   "require": {
