@@ -57,6 +57,10 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
         $this->requestStack = $requestStack;
     }
 
+    /**
+     * @return ApiClient
+     * @throws \SoapFault
+     */
     protected function getWebServiceClient()
     {
         return new ApiClient(
@@ -136,19 +140,19 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
                                 $countryHasRelay = true;
                                 break;
                         }
-                    }
 
-                    // If the area delivery type matches the selected one, or if no zone is selected
-                    if (null === $selectedDeliveryType || $zoneDeliveryType === $selectedDeliveryType) {
-                        // Check if we have a price slice
-                        if (null !== $deliveryPrice = MondialRelayDeliveryPriceQuery::create()
-                                ->filterByAreaId($area->getAreaId())
-                                ->filterByMaxWeight($weight, Criteria::GREATER_EQUAL)
-                                ->orderByMaxWeight(Criteria::ASC)
-                                ->findOne()) {
-                            $price = min($price, $deliveryPrice->getPriceWithTax());
+                        // If the area delivery type matches the selected one, or if no zone is selected
+                        if (null === $selectedDeliveryType || $zoneDeliveryType === $selectedDeliveryType) {
+                            // Check if we have a price slice
+                            if (null !== $deliveryPrice = MondialRelayDeliveryPriceQuery::create()
+                                    ->filterByAreaId($area->getAreaId())
+                                    ->filterByMaxWeight($weight, Criteria::GREATER_EQUAL)
+                                    ->orderByMaxWeight(Criteria::ASC)
+                                    ->findOne()) {
+                                $price = min($price, $deliveryPrice->getPriceWithTax());
 
-                            $deliveryDelay = $zoneConfig->getDeliveryTime();
+                                $deliveryDelay = $zoneConfig->getDeliveryTime();
+                            }
                         }
                     }
                 }
