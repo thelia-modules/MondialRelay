@@ -14,6 +14,7 @@ use MondialRelay\Model\MondialRelayDeliveryInsurance;
 use MondialRelay\Model\MondialRelayDeliveryPrice;
 use MondialRelay\Model\MondialRelayDeliveryPriceQuery;
 use MondialRelay\Model\MondialRelayZoneConfiguration;
+use Payzen\Model\Thelia\Model\ModuleConfigQuery;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Thelia\Core\Translation\Translator;
 use Thelia\Exception\TheliaProcessException;
@@ -29,6 +30,7 @@ use Thelia\Model\Lang;
 use Thelia\Model\LangQuery;
 use Thelia\Model\Message;
 use Thelia\Model\MessageQuery;
+use Thelia\Model\ModuleConfig;
 use Thelia\Model\ModuleImageQuery;
 use Thelia\Model\OrderPostage;
 use Thelia\Module\AbstractDeliveryModule;
@@ -204,5 +206,29 @@ class MondialRelay extends AbstractDeliveryModule
                 $this->deployImageFolder($module, sprintf('%s/images', __DIR__), $con);
             }
         }
+    }
+
+    /**
+     * @param ConnectionInterface|null $con
+     * @param bool $deleteModuleData
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function destroy(ConnectionInterface $con = null, $deleteModuleData = false)
+    {
+        if ($deleteModuleData) {
+            // Delete message
+            MessageQuery::create()->filterByName(self::TRACKING_MESSAGE_NAME)->delete($con);
+
+            // Delete module config data
+            ModuleConfigQuery::create()->filterByModuleId(self::getModuleId())->delete($con);
+
+            // Delete module tables.
+            if (null !== $con) {
+                $database = new Database($con);
+                $database->insertSql(null, [__DIR__ . '/Config/drop.sql']);
+            }
+        }
+
+        parent::destroy($con, $deleteModuleData);
     }
 }
