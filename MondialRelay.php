@@ -103,7 +103,7 @@ class MondialRelay extends AbstractDeliveryModule
             self::setConfigValue(self::CODE_ENSEIGNE, "BDTEST13");
             self::setConfigValue(self::PRIVATE_KEY, "PrivateK");
             self::setConfigValue(self::WEBSERVICE_URL, "https://api.mondialrelay.com/Web_Services.asmx?WSDL");
-            self::setConfigValue(self::GOOGLE_MAPS_API_KEY, "AIzaSyBY_RCM1zkJ0-Df1XMTq3fDzypFC95ZNFE");
+            self::setConfigValue(self::GOOGLE_MAPS_API_KEY, "get_your_own_api_key");
             self::setConfigValue(self::ALLOW_HOME_DELIVERY, true);
             self::setConfigValue(self::ALLOW_RELAY_DELIVERY, true);
             self::setConfigValue(self::ALLOW_INSURANCE, true);
