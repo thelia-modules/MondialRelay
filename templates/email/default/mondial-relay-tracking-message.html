@@ -1,6 +1,6 @@
 {extends file="email-layout.tpl"}
 
-{default_translation_domain domain='mondialrelay.email.default'}
+{$d='mondialrelay.email.default'}
 
 {* Do not provide a "Open in browser" link  *}
 {block name="browser"}{/block}
@@ -8,21 +8,25 @@
 {block name="pre-header"}{/block}
 
 {* Subject  *}
-{block name="email-subject"}{intl l="Your %ref order has been shipped" ref=$REF}{/block}
+{block name="email-subject"}{intl d=$d l="Your %ref order has been shipped" ref=$REF}{/block}
 
 {* Title  *}
-{block name="email-title"}{intl l="Your %ref order has been shipped" ref=$REF}{/block}
+{block name="email-title"}{intl d=$d l="Your %ref order has been shipped" ref=$REF}{/block}
 
 {* Content  *}
 {block name="email-content"}
-{loop type="order" name="order" id=$order_id}
-    {loop type="customer" name="customer.order" current=false id=$CUSTOMER backend_context="1"}
-        <p>{intl l="Dear %first %last" last=$LASTNAME first=$FIRSTNAME},</p>
+{loop type="order" name="order" customer='*' id=$order_id}
+    {loop type="customer" name="customer.order" current=false id=$CUSTOMER backend_context=1}
+        <p>{intl d=$d l="Dear %first %last" last=$LASTNAME first=$FIRSTNAME},</p>
     {/loop}
-    
-    <p>{intl l="Your order %order_ref has just been shipped from our store. The tracking number for this order is %tracking_ref. Please <a href=\"https://www.mondialrelay.fr/suivi-de-colis\">click here</a> to track the delivery." order_ref=$REF tracking_ref=$DELIVERY_REF}</p>
-    <p>{intl l="Details about this order are available <a href=\"%account_url\">in your customer account</a>." account_url={url path="/account"}}</p>
-    <p>{intl l="See you soon at <a href=\"%url\">%store</a>" url={navigate to='index'} store={config key="store_name"}}</p>
-    <p>{intl l="The %store team." store={config key="store_name"}}</p>
+
+    {$locale = 'FR'}
+    {loop type="lang" name="lang" id=$LANG limit=1}
+        {$locale = $LOCALE|substr:0:2|upper}
+    {/loop}
+    <p>{intl d=$d l="Your order %order_ref has just been shipped from our store. The tracking number for this order is %tracking_ref. Please <a href=\"https://www.mondialrelay.fr/suivi-de-colis\">click here</a> to track the delivery." tracking_ref=$DELIVERY_REF order_ref=$REF}</p>
+    <p>{intl d=$d l="Details about this order are available <a href=\"%account_url\">in your customer account</a>." account_url={url path="/account"}}</p>
+    <p>{intl d=$d l="See you soon at <a href=\"%url\">%store</a>" url={navigate to='index'} store={config key="store_name"}}</p>
+    <p>{intl d=$d l="The %store team." store={config key="store_name"}}</p>
 {/loop}
 {/block}
