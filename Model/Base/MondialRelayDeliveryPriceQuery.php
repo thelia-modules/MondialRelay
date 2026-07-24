@@ -18,9 +18,7 @@ use Propel\Runtime\Exception\PropelException;
 use Thelia\Model\Area;
 
 /**
- * Base class that represents a query for the 'mondial_relay_delivery_price' table.
- *
- *
+ * Base class that represents a query for the `mondial_relay_delivery_price` table.
  *
  * @method     ChildMondialRelayDeliveryPriceQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildMondialRelayDeliveryPriceQuery orderByMaxWeight($order = Criteria::ASC) Order by the max_weight column
@@ -36,35 +34,65 @@ use Thelia\Model\Area;
  * @method     ChildMondialRelayDeliveryPriceQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildMondialRelayDeliveryPriceQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     ChildMondialRelayDeliveryPriceQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
+ * @method     ChildMondialRelayDeliveryPriceQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
+ * @method     ChildMondialRelayDeliveryPriceQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ *
  * @method     ChildMondialRelayDeliveryPriceQuery leftJoinArea($relationAlias = null) Adds a LEFT JOIN clause to the query using the Area relation
  * @method     ChildMondialRelayDeliveryPriceQuery rightJoinArea($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Area relation
  * @method     ChildMondialRelayDeliveryPriceQuery innerJoinArea($relationAlias = null) Adds a INNER JOIN clause to the query using the Area relation
  *
- * @method     ChildMondialRelayDeliveryPrice findOne(ConnectionInterface $con = null) Return the first ChildMondialRelayDeliveryPrice matching the query
- * @method     ChildMondialRelayDeliveryPrice findOneOrCreate(ConnectionInterface $con = null) Return the first ChildMondialRelayDeliveryPrice matching the query, or a new ChildMondialRelayDeliveryPrice object populated from the query conditions when no match is found
+ * @method     ChildMondialRelayDeliveryPriceQuery joinWithArea($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Area relation
  *
- * @method     ChildMondialRelayDeliveryPrice findOneById(int $id) Return the first ChildMondialRelayDeliveryPrice filtered by the id column
- * @method     ChildMondialRelayDeliveryPrice findOneByMaxWeight(string $max_weight) Return the first ChildMondialRelayDeliveryPrice filtered by the max_weight column
- * @method     ChildMondialRelayDeliveryPrice findOneByPriceWithTax(string $price_with_tax) Return the first ChildMondialRelayDeliveryPrice filtered by the price_with_tax column
- * @method     ChildMondialRelayDeliveryPrice findOneByAreaId(int $area_id) Return the first ChildMondialRelayDeliveryPrice filtered by the area_id column
+ * @method     ChildMondialRelayDeliveryPriceQuery leftJoinWithArea() Adds a LEFT JOIN clause and with to the query using the Area relation
+ * @method     ChildMondialRelayDeliveryPriceQuery rightJoinWithArea() Adds a RIGHT JOIN clause and with to the query using the Area relation
+ * @method     ChildMondialRelayDeliveryPriceQuery innerJoinWithArea() Adds a INNER JOIN clause and with to the query using the Area relation
  *
- * @method     array findById(int $id) Return ChildMondialRelayDeliveryPrice objects filtered by the id column
- * @method     array findByMaxWeight(string $max_weight) Return ChildMondialRelayDeliveryPrice objects filtered by the max_weight column
- * @method     array findByPriceWithTax(string $price_with_tax) Return ChildMondialRelayDeliveryPrice objects filtered by the price_with_tax column
- * @method     array findByAreaId(int $area_id) Return ChildMondialRelayDeliveryPrice objects filtered by the area_id column
+ * @method     \Thelia\Model\AreaQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
+ * @method     ChildMondialRelayDeliveryPrice|null findOne(?ConnectionInterface $con = null) Return the first ChildMondialRelayDeliveryPrice matching the query
+ * @method     ChildMondialRelayDeliveryPrice findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildMondialRelayDeliveryPrice matching the query, or a new ChildMondialRelayDeliveryPrice object populated from the query conditions when no match is found
+ *
+ * @method     ChildMondialRelayDeliveryPrice|null findOneById(int $id) Return the first ChildMondialRelayDeliveryPrice filtered by the id column
+ * @method     ChildMondialRelayDeliveryPrice|null findOneByMaxWeight(string $max_weight) Return the first ChildMondialRelayDeliveryPrice filtered by the max_weight column
+ * @method     ChildMondialRelayDeliveryPrice|null findOneByPriceWithTax(string $price_with_tax) Return the first ChildMondialRelayDeliveryPrice filtered by the price_with_tax column
+ * @method     ChildMondialRelayDeliveryPrice|null findOneByAreaId(int $area_id) Return the first ChildMondialRelayDeliveryPrice filtered by the area_id column
+ *
+ * @method     ChildMondialRelayDeliveryPrice requirePk($key, ?ConnectionInterface $con = null) Return the ChildMondialRelayDeliveryPrice by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayDeliveryPrice requireOne(?ConnectionInterface $con = null) Return the first ChildMondialRelayDeliveryPrice matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildMondialRelayDeliveryPrice requireOneById(int $id) Return the first ChildMondialRelayDeliveryPrice filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayDeliveryPrice requireOneByMaxWeight(string $max_weight) Return the first ChildMondialRelayDeliveryPrice filtered by the max_weight column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayDeliveryPrice requireOneByPriceWithTax(string $price_with_tax) Return the first ChildMondialRelayDeliveryPrice filtered by the price_with_tax column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayDeliveryPrice requireOneByAreaId(int $area_id) Return the first ChildMondialRelayDeliveryPrice filtered by the area_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildMondialRelayDeliveryPrice[]|Collection find(?ConnectionInterface $con = null) Return ChildMondialRelayDeliveryPrice objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildMondialRelayDeliveryPrice> find(?ConnectionInterface $con = null) Return ChildMondialRelayDeliveryPrice objects based on current ModelCriteria
+ *
+ * @method     ChildMondialRelayDeliveryPrice[]|Collection findById(int|array<int> $id) Return ChildMondialRelayDeliveryPrice objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayDeliveryPrice> findById(int|array<int> $id) Return ChildMondialRelayDeliveryPrice objects filtered by the id column
+ * @method     ChildMondialRelayDeliveryPrice[]|Collection findByMaxWeight(string|array<string> $max_weight) Return ChildMondialRelayDeliveryPrice objects filtered by the max_weight column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayDeliveryPrice> findByMaxWeight(string|array<string> $max_weight) Return ChildMondialRelayDeliveryPrice objects filtered by the max_weight column
+ * @method     ChildMondialRelayDeliveryPrice[]|Collection findByPriceWithTax(string|array<string> $price_with_tax) Return ChildMondialRelayDeliveryPrice objects filtered by the price_with_tax column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayDeliveryPrice> findByPriceWithTax(string|array<string> $price_with_tax) Return ChildMondialRelayDeliveryPrice objects filtered by the price_with_tax column
+ * @method     ChildMondialRelayDeliveryPrice[]|Collection findByAreaId(int|array<int> $area_id) Return ChildMondialRelayDeliveryPrice objects filtered by the area_id column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayDeliveryPrice> findByAreaId(int|array<int> $area_id) Return ChildMondialRelayDeliveryPrice objects filtered by the area_id column
+ *
+ * @method     ChildMondialRelayDeliveryPrice[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildMondialRelayDeliveryPrice> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  */
 abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \MondialRelay\Model\Base\MondialRelayDeliveryPriceQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName The database name
+     * @param string $modelName The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'thelia', $modelName = '\\MondialRelay\\Model\\MondialRelayDeliveryPrice', $modelAlias = null)
+    public function __construct($dbName = 'TheliaMain', $modelName = '\\MondialRelay\\Model\\MondialRelayDeliveryPrice', ?string $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -72,17 +100,17 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
     /**
      * Returns a new ChildMondialRelayDeliveryPriceQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string $modelAlias The alias of a model in the query
+     * @param Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildMondialRelayDeliveryPriceQuery
      */
-    public static function create($modelAlias = null, $criteria = null)
+    public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
-        if ($criteria instanceof \MondialRelay\Model\MondialRelayDeliveryPriceQuery) {
+        if ($criteria instanceof ChildMondialRelayDeliveryPriceQuery) {
             return $criteria;
         }
-        $query = new \MondialRelay\Model\MondialRelayDeliveryPriceQuery();
+        $query = new ChildMondialRelayDeliveryPriceQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -107,40 +135,48 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
      *
      * @return ChildMondialRelayDeliveryPrice|array|mixed the result, formatted by the current formatter
      */
-    public function findPk($key, $con = null)
+    public function findPk($key, ?ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = MondialRelayDeliveryPriceTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
-            // the object is already in the instance pool
-            return $obj;
-        }
+
         if ($con === null) {
             $con = Propel::getServiceContainer()->getReadConnection(MondialRelayDeliveryPriceTableMap::DATABASE_NAME);
         }
+
         $this->basePreSelect($con);
-        if ($this->formatter || $this->modelAlias || $this->with || $this->select
-         || $this->selectColumns || $this->asColumns || $this->selectModifiers
-         || $this->map || $this->having || $this->joins) {
+
+        if (
+            $this->formatter || $this->modelAlias || $this->with || $this->select
+            || $this->selectColumns || $this->asColumns || $this->selectModifiers
+            || $this->map || $this->having || $this->joins
+        ) {
             return $this->findPkComplex($key, $con);
-        } else {
-            return $this->findPkSimple($key, $con);
         }
+
+        if ((null !== ($obj = MondialRelayDeliveryPriceTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
+            // the object is already in the instance pool
+            return $obj;
+        }
+
+        return $this->findPkSimple($key, $con);
     }
 
     /**
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
-     * @return   ChildMondialRelayDeliveryPrice A model object, or null if the key is not found
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildMondialRelayDeliveryPrice A model object, or null if the key is not found
      */
-    protected function findPkSimple($key, $con)
+    protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, MAX_WEIGHT, PRICE_WITH_TAX, AREA_ID FROM mondial_relay_delivery_price WHERE ID = :p0';
+        $sql = 'SELECT `id`, `max_weight`, `price_with_tax`, `area_id` FROM `mondial_relay_delivery_price` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -151,9 +187,10 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+            /** @var ChildMondialRelayDeliveryPrice $obj */
             $obj = new ChildMondialRelayDeliveryPrice();
             $obj->hydrate($row);
-            MondialRelayDeliveryPriceTableMap::addInstanceToPool($obj, (string) $key);
+            MondialRelayDeliveryPriceTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
         }
         $stmt->closeCursor();
 
@@ -163,12 +200,12 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildMondialRelayDeliveryPrice|array|mixed the result, formatted by the current formatter
      */
-    protected function findPkComplex($key, $con)
+    protected function findPkComplex($key, ConnectionInterface $con)
     {
         // As the query uses a PK condition, no limit(1) is necessary.
         $criteria = $this->isKeepQuery() ? clone $this : $this;
@@ -184,12 +221,12 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array $keys Primary keys to use for the query
+     * @param ConnectionInterface $con an optional connection object
      *
-     * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
+     * @return Collection|array|mixed the list of results, formatted by the current formatter
      */
-    public function findPks($keys, $con = null)
+    public function findPks($keys, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
@@ -206,27 +243,31 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
-     * @return ChildMondialRelayDeliveryPriceQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::ID, $key, Criteria::EQUAL);
+        $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_ID, $key, Criteria::EQUAL);
+
+        return $this;
     }
 
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array|int $keys The list of primary key to use for the query
      *
-     * @return ChildMondialRelayDeliveryPriceQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::ID, $keys, Criteria::IN);
+        $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_ID, $keys, Criteria::IN);
+
+        return $this;
     }
 
     /**
@@ -239,24 +280,24 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
      * $query->filterById(array('min' => 12)); // WHERE id > 12
      * </code>
      *
-     * @param     mixed $id The value to use as filter.
+     * @param mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayDeliveryPriceQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterById($id = null, $comparison = null)
+    public function filterById($id = null, ?string $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -267,7 +308,9 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::ID, $id, $comparison);
+        $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_ID, $id, $comparison);
+
+        return $this;
     }
 
     /**
@@ -280,24 +323,24 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
      * $query->filterByMaxWeight(array('min' => 12)); // WHERE max_weight > 12
      * </code>
      *
-     * @param     mixed $maxWeight The value to use as filter.
+     * @param mixed $maxWeight The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayDeliveryPriceQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByMaxWeight($maxWeight = null, $comparison = null)
+    public function filterByMaxWeight($maxWeight = null, ?string $comparison = null)
     {
         if (is_array($maxWeight)) {
             $useMinMax = false;
             if (isset($maxWeight['min'])) {
-                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::MAX_WEIGHT, $maxWeight['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_MAX_WEIGHT, $maxWeight['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($maxWeight['max'])) {
-                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::MAX_WEIGHT, $maxWeight['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_MAX_WEIGHT, $maxWeight['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -308,7 +351,9 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::MAX_WEIGHT, $maxWeight, $comparison);
+        $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_MAX_WEIGHT, $maxWeight, $comparison);
+
+        return $this;
     }
 
     /**
@@ -321,24 +366,24 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
      * $query->filterByPriceWithTax(array('min' => 12)); // WHERE price_with_tax > 12
      * </code>
      *
-     * @param     mixed $priceWithTax The value to use as filter.
+     * @param mixed $priceWithTax The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayDeliveryPriceQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByPriceWithTax($priceWithTax = null, $comparison = null)
+    public function filterByPriceWithTax($priceWithTax = null, ?string $comparison = null)
     {
         if (is_array($priceWithTax)) {
             $useMinMax = false;
             if (isset($priceWithTax['min'])) {
-                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::PRICE_WITH_TAX, $priceWithTax['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_PRICE_WITH_TAX, $priceWithTax['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($priceWithTax['max'])) {
-                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::PRICE_WITH_TAX, $priceWithTax['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_PRICE_WITH_TAX, $priceWithTax['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -349,7 +394,9 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::PRICE_WITH_TAX, $priceWithTax, $comparison);
+        $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_PRICE_WITH_TAX, $priceWithTax, $comparison);
+
+        return $this;
     }
 
     /**
@@ -364,24 +411,24 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
      *
      * @see       filterByArea()
      *
-     * @param     mixed $areaId The value to use as filter.
+     * @param mixed $areaId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayDeliveryPriceQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByAreaId($areaId = null, $comparison = null)
+    public function filterByAreaId($areaId = null, ?string $comparison = null)
     {
         if (is_array($areaId)) {
             $useMinMax = false;
             if (isset($areaId['min'])) {
-                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::AREA_ID, $areaId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_AREA_ID, $areaId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($areaId['max'])) {
-                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::AREA_ID, $areaId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_AREA_ID, $areaId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -392,29 +439,35 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::AREA_ID, $areaId, $comparison);
+        $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_AREA_ID, $areaId, $comparison);
+
+        return $this;
     }
 
     /**
      * Filter the query by a related \Thelia\Model\Area object
      *
      * @param \Thelia\Model\Area|ObjectCollection $area The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayDeliveryPriceQuery The current query, for fluid interface
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return $this The current query, for fluid interface
      */
-    public function filterByArea($area, $comparison = null)
+    public function filterByArea($area, ?string $comparison = null)
     {
         if ($area instanceof \Thelia\Model\Area) {
             return $this
-                ->addUsingAlias(MondialRelayDeliveryPriceTableMap::AREA_ID, $area->getId(), $comparison);
+                ->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_AREA_ID, $area->getId(), $comparison);
         } elseif ($area instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
-            return $this
-                ->addUsingAlias(MondialRelayDeliveryPriceTableMap::AREA_ID, $area->toKeyValue('PrimaryKey', 'Id'), $comparison);
+            $this
+                ->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_AREA_ID, $area->toKeyValue('PrimaryKey', 'Id'), $comparison);
+
+            return $this;
         } else {
             throw new PropelException('filterByArea() only accepts arguments of type \Thelia\Model\Area or Collection');
         }
@@ -423,12 +476,12 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the Area relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return ChildMondialRelayDeliveryPriceQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function joinArea($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinArea(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Area');
@@ -457,13 +510,13 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
+     * @param string $relationAlias optional alias for the relation,
      *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Thelia\Model\AreaQuery A secondary query class using the current class as primary query
+     * @return \Thelia\Model\AreaQuery A secondary query class using the current class as primary query
      */
-    public function useAreaQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useAreaQuery(?string $relationAlias = null, string $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinArea($relationAlias, $joinType)
@@ -471,16 +524,112 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
     }
 
     /**
+     * Use the Area relation Area object
+     *
+     * @param callable(\Thelia\Model\AreaQuery):\Thelia\Model\AreaQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withAreaQuery(
+        callable $callable,
+        ?string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useAreaQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+
+    /**
+     * Use the relation to Area table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \Thelia\Model\AreaQuery The inner query object of the EXISTS statement
+     */
+    public function useAreaExistsQuery(?string $modelAlias = null, ?string $queryClass = null, string $typeOfExists = 'EXISTS')
+    {
+        /** @var $q \Thelia\Model\AreaQuery */
+        $q = $this->useExistsQuery('Area', $modelAlias, $queryClass, $typeOfExists);
+        return $q;
+    }
+
+    /**
+     * Use the relation to Area table for a NOT EXISTS query.
+     *
+     * @see useAreaExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \Thelia\Model\AreaQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useAreaNotExistsQuery(?string $modelAlias = null, ?string $queryClass = null)
+    {
+        /** @var $q \Thelia\Model\AreaQuery */
+        $q = $this->useExistsQuery('Area', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $q;
+    }
+
+    /**
+     * Use the relation to Area table for an IN query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
+     * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
+     *
+     * @return \Thelia\Model\AreaQuery The inner query object of the IN statement
+     */
+    public function useInAreaQuery(?string $modelAlias = null, ?string $queryClass = null, string $typeOfIn = 'IN')
+    {
+        /** @var $q \Thelia\Model\AreaQuery */
+        $q = $this->useInQuery('Area', $modelAlias, $queryClass, $typeOfIn);
+        return $q;
+    }
+
+    /**
+     * Use the relation to Area table for a NOT IN query.
+     *
+     * @see useAreaInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
+     *
+     * @return \Thelia\Model\AreaQuery The inner query object of the NOT IN statement
+     */
+    public function useNotInAreaQuery(?string $modelAlias = null, ?string $queryClass = null)
+    {
+        /** @var $q \Thelia\Model\AreaQuery */
+        $q = $this->useInQuery('Area', $modelAlias, $queryClass, 'NOT IN');
+        return $q;
+    }
+
+    /**
      * Exclude object from result
      *
-     * @param   ChildMondialRelayDeliveryPrice $mondialRelayDeliveryPrice Object to remove from the list of results
+     * @param ChildMondialRelayDeliveryPrice $mondialRelayDeliveryPrice Object to remove from the list of results
      *
-     * @return ChildMondialRelayDeliveryPriceQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function prune($mondialRelayDeliveryPrice = null)
     {
         if ($mondialRelayDeliveryPrice) {
-            $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::ID, $mondialRelayDeliveryPrice->getId(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(MondialRelayDeliveryPriceTableMap::COL_ID, $mondialRelayDeliveryPrice->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
@@ -492,16 +641,16 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public function doDeleteAll(ConnectionInterface $con = null)
+    public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayDeliveryPriceTableMap::DATABASE_NAME);
         }
-        $affectedRows = 0; // initialize var to track total num of affected rows
-        try {
-            // use transaction because $criteria could contain info
-            // for more than one table or we could emulating ON DELETE CASCADE, etc.
-            $con->beginTransaction();
+
+        // use transaction because $criteria could contain info
+        // for more than one table or we could emulating ON DELETE CASCADE, etc.
+        return $con->transaction(function () use ($con) {
+            $affectedRows = 0; // initialize var to track total num of affected rows
             $affectedRows += parent::doDeleteAll($con);
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
@@ -509,28 +658,21 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
             MondialRelayDeliveryPriceTableMap::clearInstancePool();
             MondialRelayDeliveryPriceTableMap::clearRelatedInstancePool();
 
-            $con->commit();
-        } catch (PropelException $e) {
-            $con->rollBack();
-            throw $e;
-        }
-
-        return $affectedRows;
+            return $affectedRows;
+        });
     }
 
     /**
-     * Performs a DELETE on the database, given a ChildMondialRelayDeliveryPrice or Criteria object OR a primary key value.
+     * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param mixed               $values Criteria or ChildMondialRelayDeliveryPrice object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         if supported by native driver or if emulated using Propel.
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
-     public function delete(ConnectionInterface $con = null)
-     {
+    public function delete(?ConnectionInterface $con = null): int
+    {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayDeliveryPriceTableMap::DATABASE_NAME);
         }
@@ -540,25 +682,18 @@ abstract class MondialRelayDeliveryPriceQuery extends ModelCriteria
         // Set the correct dbName
         $criteria->setDbName(MondialRelayDeliveryPriceTableMap::DATABASE_NAME);
 
-        $affectedRows = 0; // initialize var to track total num of affected rows
+        // use transaction because $criteria could contain info
+        // for more than one table or we could emulating ON DELETE CASCADE, etc.
+        return $con->transaction(function () use ($con, $criteria) {
+            $affectedRows = 0; // initialize var to track total num of affected rows
 
-        try {
-            // use transaction because $criteria could contain info
-            // for more than one table or we could emulating ON DELETE CASCADE, etc.
-            $con->beginTransaction();
-
-
-        MondialRelayDeliveryPriceTableMap::removeInstanceFromPool($criteria);
+            MondialRelayDeliveryPriceTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
             MondialRelayDeliveryPriceTableMap::clearRelatedInstancePool();
-            $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
-            $con->rollBack();
-            throw $e;
-        }
+        });
     }
 
-} // MondialRelayDeliveryPriceQuery
+}

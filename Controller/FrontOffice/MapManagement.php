@@ -8,37 +8,39 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
-/**
- * Created by Franck Allimant, CQFDev <franck@cqfdev.fr>
- * Date: 12/03/2018 10:41
- */
+declare(strict_types=1);
 
 namespace MondialRelay\Controller\FrontOffice;
 
 use MondialRelay\Event\FindRelayEvent;
 use MondialRelay\Event\MondialRelayEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Thelia\Controller\Front\BaseFrontController;
 use Thelia\Core\HttpFoundation\JsonResponse;
 
-require __DIR__ . "/../../vendor/autoload.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
 
+/**
+ * Legacy relay-point search endpoint, kept for the Smarty front (retro-compatibility).
+ * The Flexy front uses the native pickup-location API instead
+ * (see MondialRelay\EventListeners\PickupLocationListener).
+ */
 class MapManagement extends BaseFrontController
 {
-    public function getRelayMapAction()
+    public function getRelayMapAction(EventDispatcherInterface $dispatcher): JsonResponse
     {
         $event = new FindRelayEvent(
-            intval($this->getRequest()->get('country_id', 0)),
-            $this->getRequest()->get('city', ''),
-            $this->getRequest()->get('zipcode', ''),
-            floatval($this->getRequest()->get('radius', 10))
+            (int) $this->getRequest()->get('country_id', 0),
+            (string) $this->getRequest()->get('city', ''),
+            (string) $this->getRequest()->get('zipcode', ''),
+            (float) $this->getRequest()->get('radius', 10)
         );
 
-        $this->getDispatcher()->dispatch(MondialRelayEvents::FIND_RELAYS, $event);
-
+        $dispatcher->dispatch($event, MondialRelayEvents::FIND_RELAYS);
 
         return new JsonResponse([
             'points' => $event->getPoints(),
-            'error' => $event->getError()
+            'error' => $event->getError(),
         ]);
     }
 }

@@ -34,7 +34,7 @@
         <requirement key="moduleId">\d+</requirement>
     </route>
 
-    <route id="mondial_relay.price.delete" path="/admin/module/MondialRelay/prices/delete/{priceId}/{moduleId}">
+    <route id="mondial_relay.price.delete" path="/admin/module/MondialRelay/prices/delete/{priceId}/{moduleId}" methods="POST">
         <default key="_controller">MondialRelay\Controller\BackOffice\PriceController::deleteAction</default>
         <requirement key="priceId">\d+</requirement>
         <requirement key="moduleId">\d+</requirement>
@@ -50,7 +50,7 @@
         <default key="_controller">MondialRelay\Controller\BackOffice\InsuranceController::createAction</default>
     </route>
 
-    <route id="mondial_relay.insurance.delete" path="/admin/module/MondialRelay/insurances/delete/{insuranceId}">
+    <route id="mondial_relay.insurance.delete" path="/admin/module/MondialRelay/insurances/delete/{insuranceId}" methods="POST">
         <default key="_controller">MondialRelay\Controller\BackOffice\InsuranceController::deleteAction</default>
         <requirement key="insuranceId">\d+</requirement>
     </route>

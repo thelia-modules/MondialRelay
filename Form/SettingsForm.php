@@ -8,9 +8,13 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay\Form;
 
 use MondialRelay\MondialRelay;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Thelia\Form\BaseForm;
 
@@ -19,87 +23,92 @@ use Thelia\Form\BaseForm;
  */
 class SettingsForm extends BaseForm
 {
-    protected function buildForm()
+    public static function getName(): string
+    {
+        return 'mondialrelay-settings-form';
+    }
+
+    protected function buildForm(): void
     {
         $this->formBuilder
             ->add(
                 MondialRelay::CODE_ENSEIGNE,
-                'text',
+                TextType::class,
                 [
-                    "constraints" => [new NotBlank()],
+                    'constraints' => [new NotBlank()],
                     'label' => $this->translator->trans('Mondial Relay store code', [], MondialRelay::DOMAIN_NAME),
                     'label_attr' => [
-                        'help' => $this->translator->trans('This is the store code, as provided by Mondial Relay.', [], MondialRelay::DOMAIN_NAME)
-                    ]
-
+                        'help' => $this->translator->trans('This is the store code, as provided by Mondial Relay.', [], MondialRelay::DOMAIN_NAME),
+                    ],
                 ]
-            )->add(
+            )
+            ->add(
                 MondialRelay::PRIVATE_KEY,
-                'text',
+                TextType::class,
                 [
-                    "constraints" => [new NotBlank()],
+                    'constraints' => [new NotBlank()],
                     'label' => $this->translator->trans('Private key', [], MondialRelay::DOMAIN_NAME),
                     'label_attr' => [
-                        'help' => $this->translator->trans('Your private key, as provided by Mondial Relay.', [], MondialRelay::DOMAIN_NAME)
-                    ]
-
+                        'help' => $this->translator->trans('Your private key, as provided by Mondial Relay.', [], MondialRelay::DOMAIN_NAME),
+                    ],
                 ]
-            )->add(
+            )
+            ->add(
                 MondialRelay::ALLOW_HOME_DELIVERY,
-                'checkbox',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'label' => $this->translator->trans('Allow home delivery', [], MondialRelay::DOMAIN_NAME),
                     'label_attr' => [
-                        'help' => $this->translator->trans('Check this box to allow delivery at customer address in supported countries.', [], MondialRelay::DOMAIN_NAME)
-                    ]
-
+                        'help' => $this->translator->trans('Check this box to allow delivery at customer address in supported countries.', [], MondialRelay::DOMAIN_NAME),
+                    ],
                 ]
-            )->add(
+            )
+            ->add(
                 MondialRelay::ALLOW_RELAY_DELIVERY,
-                'checkbox',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'label' => $this->translator->trans('Allow relay delivery', [], MondialRelay::DOMAIN_NAME),
                     'label_attr' => [
-                        'help' => $this->translator->trans('Check this box to allow delivery in relays in supported countries.', [], MondialRelay::DOMAIN_NAME)
-                    ]
-
+                        'help' => $this->translator->trans('Check this box to allow delivery in relays in supported countries.', [], MondialRelay::DOMAIN_NAME),
+                    ],
                 ]
-            )->add(
+            )
+            ->add(
                 MondialRelay::ALLOW_INSURANCE,
-                'checkbox',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'label' => $this->translator->trans('Allow optional insurance', [], MondialRelay::DOMAIN_NAME),
                     'label_attr' => [
-                        'help' => $this->translator->trans('Check this box to allow an optionnal insurance selection depending on cart value.', [], MondialRelay::DOMAIN_NAME)
-                    ]
-
+                        'help' => $this->translator->trans('Check this box to allow an optionnal insurance selection depending on cart value.', [], MondialRelay::DOMAIN_NAME),
+                    ],
                 ]
-            )->add(
+            )
+            ->add(
                 MondialRelay::WEBSERVICE_URL,
-                'text',
+                TextType::class,
                 [
                     'label' => $this->translator->trans('Mondial Relay Web service WSDL URL', [], MondialRelay::DOMAIN_NAME),
                     'label_attr' => [
-                        'help' => $this->translator->trans('This is the URL of the Mondial Relay web service WSDL.', [], MondialRelay::DOMAIN_NAME)
-                    ]
+                        'help' => $this->translator->trans('This is the URL of the Mondial Relay web service WSDL.', [], MondialRelay::DOMAIN_NAME),
+                    ],
                 ]
-            )->add(
+            )
+            ->add(
                 MondialRelay::GOOGLE_MAPS_API_KEY,
-                'text',
+                TextType::class,
                 [
                     'label' => $this->translator->trans('Google Map API Key', [], MondialRelay::DOMAIN_NAME),
                     'label_attr' => [
                         'help' => $this->translator->trans(
                             'This key is required to display relays map. <a href="%get_key_url">Click here</a> to get one.',
-                            [ "%get_key_url" => "https://developers.google.com/maps/documentation/javascript/get-api-key" ],
+                            ['%get_key_url' => 'https://developers.google.com/maps/documentation/javascript/get-api-key'],
                             MondialRelay::DOMAIN_NAME
-                        )
-                    ]
+                        ),
+                    ],
                 ]
             );
-        ;
     }
 }

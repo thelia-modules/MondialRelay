@@ -8,9 +8,13 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay\Form;
 
 use MondialRelay\MondialRelay;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Thelia\Form\BaseForm;
 
@@ -19,30 +23,35 @@ use Thelia\Form\BaseForm;
  */
 class PricesUpdateForm extends BaseForm
 {
-    protected function buildForm()
+    public static function getName(): string
+    {
+        return 'mondialrelay-prices-update-form';
+    }
+
+    protected function buildForm(): void
     {
         $this->formBuilder
             ->add(
                 'max_weight',
-                'collection',
+                CollectionType::class,
                 [
-                    "type" => "number",
-                    "constraints" => [new GreaterThan([ 'value' => 0 ])],
+                    'entry_type' => NumberType::class,
+                    'entry_options' => ['constraints' => [new GreaterThan(['value' => 0])]],
                     'label' => $this->translator->trans('Weight up to...', [], MondialRelay::DOMAIN_NAME),
-                    'allow_add'    => true,
-                    'allow_delete' => true,
-                ]
-            )->add(
-                'price',
-                'collection',
-                [
-                    "type" => "number",
-                    "constraints" => [new GreaterThan([ 'value' => 0 ])],
-                    'label' => $this->translator->trans('Price', [], MondialRelay::DOMAIN_NAME),
-                    'allow_add'    => true,
+                    'allow_add' => true,
                     'allow_delete' => true,
                 ]
             )
-        ;
+            ->add(
+                'price',
+                CollectionType::class,
+                [
+                    'entry_type' => NumberType::class,
+                    'entry_options' => ['constraints' => [new GreaterThan(['value' => 0])]],
+                    'label' => $this->translator->trans('Price', [], MondialRelay::DOMAIN_NAME),
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                ]
+            );
     }
 }

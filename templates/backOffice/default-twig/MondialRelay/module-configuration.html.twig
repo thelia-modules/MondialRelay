@@ -1,0 +1,332 @@
+{# Mondial Relay configuration fragment — rendered inside the module-configure page (default-twig BO) #}
+{% set d = 'mondialrelay.bo.default' %}
+{% set settings_token = attribute(settingsForm, '_token') %}
+{% set prices_token = attribute(pricesUpdateForm, '_token') %}
+{% set price_create_token = attribute(priceCreateForm, '_token') %}
+{% set attributes_token = attribute(areaAttributesForm, '_token') %}
+{% set insurances_token = attribute(insurancesUpdateForm, '_token') %}
+{% set insurance_create_token = attribute(insuranceCreateForm, '_token') %}
+{% set delete_token = attribute(deleteForm, '_token') %}
+
+<div class="mondial-relay-configuration">
+
+    {# Errors are surfaced via the back-office flash bag (rendered by the base template). #}
+
+    <ul class="nav nav-tabs mb-3" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link{{ active_tab == 'general' ? ' active' : '' }}" data-bs-toggle="tab"
+                    data-bs-target="#mr-general" type="button" role="tab">
+                {{ 'Configuration'|trans({}, d) }}
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link{{ active_tab == 'prices' ? ' active' : '' }}" data-bs-toggle="tab"
+                    data-bs-target="#mr-prices" type="button" role="tab">
+                {{ 'Prices'|trans({}, d) }}
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link{{ active_tab == 'insurances' ? ' active' : '' }}" data-bs-toggle="tab"
+                    data-bs-target="#mr-insurances" type="button" role="tab">
+                {{ 'Insurances'|trans({}, d) }}
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+
+        {# ============================ GENERAL ============================ #}
+        <div class="tab-pane fade{{ active_tab == 'general' ? ' show active' : '' }}" id="mr-general" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" action="{{ path('mondial_relay.settings.save') }}">
+                        <input type="hidden" name="{{ settings_token.vars.full_name }}" value="{{ settings_token.vars.value }}">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% for field in [settingsForm.code_enseigne, settingsForm.private_key, settingsForm.webservice_url, settingsForm.google_maps_api_key] %}
+                                    <div class="mb-3">
+                                        <label class="form-label" for="{{ field.vars.id }}">{{ field.vars.label }}</label>
+                                        <input type="text" id="{{ field.vars.id }}"
+                                               name="{{ field.vars.full_name }}"
+                                               value="{{ field.vars.value }}" class="form-control">
+                                        {% if field.vars.label_attr.help is defined and field.vars.label_attr.help %}
+                                            <div class="form-text">{{ field.vars.label_attr.help|raw }}</div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {% for field in [settingsForm.allow_relay_delivery, settingsForm.allow_home_delivery, settingsForm.allow_insurance] %}
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="{{ field.vars.id }}"
+                                               name="{{ field.vars.full_name }}" value="1"
+                                               {{ field.vars.checked ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="{{ field.vars.id }}">{{ field.vars.label }}</label>
+                                        {% if field.vars.label_attr.help is defined and field.vars.label_attr.help %}
+                                            <div class="form-text">{{ field.vars.label_attr.help|raw }}</div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        {% if is_granted('UPDATE', {resource: 'admin.module', module: 'MondialRelay'}) %}
+                            <button type="submit" class="btn btn-primary btn-sm mt-3">
+                                <i class="bi bi-save"></i> {{ 'Save'|trans({}, d) }}
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {# ============================ PRICES ============================ #}
+        <div class="tab-pane fade{{ active_tab == 'prices' ? ' show active' : '' }}" id="mr-prices" role="tabpanel">
+            {% if areas|length %}
+                {% for area in areas %}
+                    <div class="card mb-4">
+                        <div class="card-header text-uppercase">
+                            {{ 'Shipping zone'|trans({}, d) }} — {{ area.name }}
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {# Prices #}
+                                <div class="col-md-8">
+                                    <h6>{{ 'Delivery prices'|trans({}, d) }}</h6>
+                                    <form method="post" action="{{ path('mondial_relay.price.save', {areaId: area.id, moduleId: module_id}) }}">
+                                        <input type="hidden" name="{{ prices_token.vars.full_name }}" value="{{ prices_token.vars.value }}">
+                                        <table class="table table-sm table-striped js-mr-prices">
+                                            <thead>
+                                                <tr>
+                                                    <th>{{ 'Cart weight up to...'|trans({}, d) }}</th>
+                                                    <th>{{ 'Price with tax'|trans({}, d) }}</th>
+                                                    <th class="text-end">{{ 'Actions'|trans({}, d) }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for price in area.prices %}
+                                                    <tr class="js-mr-price-row">
+                                                        <td>
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="text" class="form-control"
+                                                                       name="{{ pricesUpdateForm.max_weight.vars.full_name }}[]"
+                                                                       value="{{ price.maxWeight }}">
+                                                                <span class="input-group-text">{{ 'kg'|trans({}, d) }}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="text" class="form-control"
+                                                                       name="{{ pricesUpdateForm.price.vars.full_name }}[]"
+                                                                       value="{{ price.priceWithTax }}">
+                                                                <span class="input-group-text">{{ currency_symbol }}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-end text-nowrap">
+                                                            {# Removal is persisted by "Save changes" (the save wipes then re-inserts the submitted rows). #}
+                                                            <button type="button" class="btn btn-outline-danger btn-sm js-mr-remove-row"
+                                                                    title="{{ 'Remove this line'|trans({}, d) }}">
+                                                                <i class="bi bi-dash-lg"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3" class="text-end">
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm js-mr-add-row">
+                                                            <i class="bi bi-plus-lg"></i> {{ 'Add a line'|trans({}, d) }}
+                                                        </button>
+                                                        {% if is_granted('UPDATE', {resource: 'admin.module', module: 'MondialRelay'}) %}
+                                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                                <i class="bi bi-save"></i> {{ 'Save changes'|trans({}, d) }}
+                                                            </button>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </form>
+
+                                    {# Quick add a single price #}
+                                    {% if is_granted('UPDATE', {resource: 'admin.module', module: 'MondialRelay'}) %}
+                                        <form method="post" action="{{ path('mondial_relay.price.create', {areaId: area.id, moduleId: module_id}) }}"
+                                              class="row g-2 align-items-end">
+                                            <input type="hidden" name="{{ price_create_token.vars.full_name }}" value="{{ price_create_token.vars.value }}">
+                                            <div class="col">
+                                                <label class="form-label small">{{ 'Weight up to...'|trans({}, d) }}</label>
+                                                <input type="text" class="form-control form-control-sm" name="{{ priceCreateForm.max_weight.vars.full_name }}">
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label small">{{ 'Price'|trans({}, d) }}</label>
+                                                <input type="text" class="form-control form-control-sm" name="{{ priceCreateForm.price.vars.full_name }}">
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                    <i class="bi bi-plus-lg"></i> {{ 'Add this price'|trans({}, d) }}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    {% endif %}
+                                </div>
+
+                                {# Area attributes #}
+                                <div class="col-md-4">
+                                    <h6>{{ 'Area properties'|trans({}, d) }}</h6>
+                                    <form method="post" action="{{ path('mondial_relay.area-attributes.save', {areaId: area.id, moduleId: module_id}) }}">
+                                        <input type="hidden" name="{{ attributes_token.vars.full_name }}" value="{{ attributes_token.vars.value }}">
+                                        <div class="mb-3">
+                                            <label class="form-label">{{ 'Delivery delay'|trans({}, d) }}</label>
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" class="form-control"
+                                                       name="{{ areaAttributesForm.delivery_time.vars.full_name }}"
+                                                       value="{{ area.deliveryTime }}">
+                                                <span class="input-group-text">{{ 'days'|trans({}, d) }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">{{ 'Delivery type'|trans({}, d) }}</label>
+                                            <select class="form-select form-select-sm" name="{{ areaAttributesForm.delivery_type.vars.full_name }}">
+                                                {% for choice in areaAttributesForm.delivery_type.vars.choices %}
+                                                    <option value="{{ choice.value }}" {{ area.deliveryType is not null and area.deliveryType == choice.value ? 'selected' : '' }}>
+                                                        {{ choice.label }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        {% if is_granted('UPDATE', {resource: 'admin.module', module: 'MondialRelay'}) %}
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-save"></i> {{ 'Save'|trans({}, d) }}
+                                            </button>
+                                        {% endif %}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning">
+                    {{ 'There is no shipping zone defined for Mondial Relay.'|trans({}, d) }}
+                    <a href="/admin/configuration/shipping_zones">{{ 'Configure shipping zones'|trans({}, d) }}</a>
+                </div>
+            {% endif %}
+        </div>
+
+        {# ============================ INSURANCES ============================ #}
+        <div class="tab-pane fade{{ active_tab == 'insurances' ? ' show active' : '' }}" id="mr-insurances" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" action="{{ path('mondial_relay.insurance.save') }}">
+                        <input type="hidden" name="{{ insurances_token.vars.full_name }}" value="{{ insurances_token.vars.value }}">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'Cart value'|trans({}, d) }}</th>
+                                    <th>{{ 'Insurance price with tax'|trans({}, d) }}</th>
+                                    <th class="text-end">{{ 'Actions'|trans({}, d) }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for insurance in insurances %}
+                                    <tr>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <input type="hidden" name="{{ insurancesUpdateForm.max_value.vars.full_name }}[{{ insurance.id }}]" value="{{ insurance.maxValue }}">
+                                                <input type="text" class="form-control" disabled value="{{ insurance.maxValue }}">
+                                                <span class="input-group-text">{{ currency_symbol }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control"
+                                                       name="{{ insurancesUpdateForm.price_with_tax.vars.full_name }}[{{ insurance.id }}]"
+                                                       value="{{ insurance.priceWithTax }}">
+                                                <span class="input-group-text">{{ currency_symbol }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">
+                                            {% if is_granted('DELETE', {resource: 'admin.module', module: 'MondialRelay'}) %}
+                                                {# Submits the external POST form below (CSRF-protected), not the surrounding update form. #}
+                                                <button type="submit" form="mr-del-ins-{{ insurance.id }}"
+                                                        class="btn btn-danger btn-sm" title="{{ 'Delete this insurance'|trans({}, d) }}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end">
+                                        {% if is_granted('UPDATE', {resource: 'admin.module', module: 'MondialRelay'}) %}
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-save"></i> {{ 'Save changes'|trans({}, d) }}
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </form>
+
+                    {# CSRF-protected delete forms, referenced by the row buttons via the form= attribute (no nested forms). #}
+                    {% if is_granted('DELETE', {resource: 'admin.module', module: 'MondialRelay'}) %}
+                        {% for insurance in insurances %}
+                            <form id="mr-del-ins-{{ insurance.id }}" method="post"
+                                  action="{{ path('mondial_relay.insurance.delete', {insuranceId: insurance.id}) }}" class="d-none">
+                                <input type="hidden" name="{{ delete_token.vars.full_name }}" value="{{ delete_token.vars.value }}">
+                            </form>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if is_granted('UPDATE', {resource: 'admin.module', module: 'MondialRelay'}) %}
+                        <form method="post" action="{{ path('mondial_relay.insurance.create') }}" class="row g-2 align-items-end">
+                            <input type="hidden" name="{{ insurance_create_token.vars.full_name }}" value="{{ insurance_create_token.vars.value }}">
+                            <div class="col">
+                                <label class="form-label small">{{ 'Cart value'|trans({}, d) }}</label>
+                                <input type="text" class="form-control form-control-sm" name="{{ insuranceCreateForm.max_value.vars.full_name }}">
+                            </div>
+                            <div class="col">
+                                <label class="form-label small">{{ 'Insurance price'|trans({}, d) }}</label>
+                                <input type="text" class="form-control form-control-sm" name="{{ insuranceCreateForm.price_with_tax.vars.full_name }}">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-plus-lg"></i> {{ 'Add new insurance'|trans({}, d) }}
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {# Blank price row template, cloned by the "Add a line" button #}
+    <template id="mr-price-row-tpl">
+        <tr class="js-mr-price-row">
+            <td>
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" name="{{ pricesUpdateForm.max_weight.vars.full_name }}[]" value="">
+                    <span class="input-group-text">{{ 'kg'|trans({}, d) }}</span>
+                </div>
+            </td>
+            <td>
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" name="{{ pricesUpdateForm.price.vars.full_name }}[]" value="">
+                    <span class="input-group-text">{{ currency_symbol }}</span>
+                </div>
+            </td>
+            <td class="text-end text-nowrap">
+                <button type="button" class="btn btn-outline-danger btn-sm js-mr-remove-row" title="{{ 'Remove this line'|trans({}, d) }}">
+                    <i class="bi bi-dash-lg"></i>
+                </button>
+            </td>
+        </tr>
+    </template>
+</div>

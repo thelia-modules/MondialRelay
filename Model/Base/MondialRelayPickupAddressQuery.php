@@ -10,13 +10,12 @@ use MondialRelay\Model\Map\MondialRelayPickupAddressTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'mondial_relay_pickup_address' table.
- *
- *
+ * Base class that represents a query for the `mondial_relay_pickup_address` table.
  *
  * @method     ChildMondialRelayPickupAddressQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildMondialRelayPickupAddressQuery orderByJsonRelayData($order = Criteria::ASC) Order by the json_relay_data column
@@ -30,29 +29,49 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMondialRelayPickupAddressQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildMondialRelayPickupAddressQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildMondialRelayPickupAddress findOne(ConnectionInterface $con = null) Return the first ChildMondialRelayPickupAddress matching the query
- * @method     ChildMondialRelayPickupAddress findOneOrCreate(ConnectionInterface $con = null) Return the first ChildMondialRelayPickupAddress matching the query, or a new ChildMondialRelayPickupAddress object populated from the query conditions when no match is found
+ * @method     ChildMondialRelayPickupAddressQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
+ * @method     ChildMondialRelayPickupAddressQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
+ * @method     ChildMondialRelayPickupAddressQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildMondialRelayPickupAddress findOneById(int $id) Return the first ChildMondialRelayPickupAddress filtered by the id column
- * @method     ChildMondialRelayPickupAddress findOneByJsonRelayData(string $json_relay_data) Return the first ChildMondialRelayPickupAddress filtered by the json_relay_data column
- * @method     ChildMondialRelayPickupAddress findOneByOrderAddressId(int $order_address_id) Return the first ChildMondialRelayPickupAddress filtered by the order_address_id column
+ * @method     ChildMondialRelayPickupAddress|null findOne(?ConnectionInterface $con = null) Return the first ChildMondialRelayPickupAddress matching the query
+ * @method     ChildMondialRelayPickupAddress findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildMondialRelayPickupAddress matching the query, or a new ChildMondialRelayPickupAddress object populated from the query conditions when no match is found
  *
- * @method     array findById(int $id) Return ChildMondialRelayPickupAddress objects filtered by the id column
- * @method     array findByJsonRelayData(string $json_relay_data) Return ChildMondialRelayPickupAddress objects filtered by the json_relay_data column
- * @method     array findByOrderAddressId(int $order_address_id) Return ChildMondialRelayPickupAddress objects filtered by the order_address_id column
+ * @method     ChildMondialRelayPickupAddress|null findOneById(int $id) Return the first ChildMondialRelayPickupAddress filtered by the id column
+ * @method     ChildMondialRelayPickupAddress|null findOneByJsonRelayData(string $json_relay_data) Return the first ChildMondialRelayPickupAddress filtered by the json_relay_data column
+ * @method     ChildMondialRelayPickupAddress|null findOneByOrderAddressId(int $order_address_id) Return the first ChildMondialRelayPickupAddress filtered by the order_address_id column
  *
+ * @method     ChildMondialRelayPickupAddress requirePk($key, ?ConnectionInterface $con = null) Return the ChildMondialRelayPickupAddress by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayPickupAddress requireOne(?ConnectionInterface $con = null) Return the first ChildMondialRelayPickupAddress matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildMondialRelayPickupAddress requireOneById(int $id) Return the first ChildMondialRelayPickupAddress filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayPickupAddress requireOneByJsonRelayData(string $json_relay_data) Return the first ChildMondialRelayPickupAddress filtered by the json_relay_data column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayPickupAddress requireOneByOrderAddressId(int $order_address_id) Return the first ChildMondialRelayPickupAddress filtered by the order_address_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildMondialRelayPickupAddress[]|Collection find(?ConnectionInterface $con = null) Return ChildMondialRelayPickupAddress objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildMondialRelayPickupAddress> find(?ConnectionInterface $con = null) Return ChildMondialRelayPickupAddress objects based on current ModelCriteria
+ *
+ * @method     ChildMondialRelayPickupAddress[]|Collection findById(int|array<int> $id) Return ChildMondialRelayPickupAddress objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayPickupAddress> findById(int|array<int> $id) Return ChildMondialRelayPickupAddress objects filtered by the id column
+ * @method     ChildMondialRelayPickupAddress[]|Collection findByJsonRelayData(string|array<string> $json_relay_data) Return ChildMondialRelayPickupAddress objects filtered by the json_relay_data column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayPickupAddress> findByJsonRelayData(string|array<string> $json_relay_data) Return ChildMondialRelayPickupAddress objects filtered by the json_relay_data column
+ * @method     ChildMondialRelayPickupAddress[]|Collection findByOrderAddressId(int|array<int> $order_address_id) Return ChildMondialRelayPickupAddress objects filtered by the order_address_id column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayPickupAddress> findByOrderAddressId(int|array<int> $order_address_id) Return ChildMondialRelayPickupAddress objects filtered by the order_address_id column
+ *
+ * @method     ChildMondialRelayPickupAddress[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildMondialRelayPickupAddress> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  */
 abstract class MondialRelayPickupAddressQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \MondialRelay\Model\Base\MondialRelayPickupAddressQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName The database name
+     * @param string $modelName The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'thelia', $modelName = '\\MondialRelay\\Model\\MondialRelayPickupAddress', $modelAlias = null)
+    public function __construct($dbName = 'TheliaMain', $modelName = '\\MondialRelay\\Model\\MondialRelayPickupAddress', ?string $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -60,17 +79,17 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
     /**
      * Returns a new ChildMondialRelayPickupAddressQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string $modelAlias The alias of a model in the query
+     * @param Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildMondialRelayPickupAddressQuery
      */
-    public static function create($modelAlias = null, $criteria = null)
+    public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
-        if ($criteria instanceof \MondialRelay\Model\MondialRelayPickupAddressQuery) {
+        if ($criteria instanceof ChildMondialRelayPickupAddressQuery) {
             return $criteria;
         }
-        $query = new \MondialRelay\Model\MondialRelayPickupAddressQuery();
+        $query = new ChildMondialRelayPickupAddressQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -95,40 +114,48 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
      *
      * @return ChildMondialRelayPickupAddress|array|mixed the result, formatted by the current formatter
      */
-    public function findPk($key, $con = null)
+    public function findPk($key, ?ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = MondialRelayPickupAddressTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
-            // the object is already in the instance pool
-            return $obj;
-        }
+
         if ($con === null) {
             $con = Propel::getServiceContainer()->getReadConnection(MondialRelayPickupAddressTableMap::DATABASE_NAME);
         }
+
         $this->basePreSelect($con);
-        if ($this->formatter || $this->modelAlias || $this->with || $this->select
-         || $this->selectColumns || $this->asColumns || $this->selectModifiers
-         || $this->map || $this->having || $this->joins) {
+
+        if (
+            $this->formatter || $this->modelAlias || $this->with || $this->select
+            || $this->selectColumns || $this->asColumns || $this->selectModifiers
+            || $this->map || $this->having || $this->joins
+        ) {
             return $this->findPkComplex($key, $con);
-        } else {
-            return $this->findPkSimple($key, $con);
         }
+
+        if ((null !== ($obj = MondialRelayPickupAddressTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
+            // the object is already in the instance pool
+            return $obj;
+        }
+
+        return $this->findPkSimple($key, $con);
     }
 
     /**
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
-     * @return   ChildMondialRelayPickupAddress A model object, or null if the key is not found
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildMondialRelayPickupAddress A model object, or null if the key is not found
      */
-    protected function findPkSimple($key, $con)
+    protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, JSON_RELAY_DATA, ORDER_ADDRESS_ID FROM mondial_relay_pickup_address WHERE ID = :p0';
+        $sql = 'SELECT `id`, `json_relay_data`, `order_address_id` FROM `mondial_relay_pickup_address` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -139,9 +166,10 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+            /** @var ChildMondialRelayPickupAddress $obj */
             $obj = new ChildMondialRelayPickupAddress();
             $obj->hydrate($row);
-            MondialRelayPickupAddressTableMap::addInstanceToPool($obj, (string) $key);
+            MondialRelayPickupAddressTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
         }
         $stmt->closeCursor();
 
@@ -151,12 +179,12 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildMondialRelayPickupAddress|array|mixed the result, formatted by the current formatter
      */
-    protected function findPkComplex($key, $con)
+    protected function findPkComplex($key, ConnectionInterface $con)
     {
         // As the query uses a PK condition, no limit(1) is necessary.
         $criteria = $this->isKeepQuery() ? clone $this : $this;
@@ -172,12 +200,12 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array $keys Primary keys to use for the query
+     * @param ConnectionInterface $con an optional connection object
      *
-     * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
+     * @return Collection|array|mixed the list of results, formatted by the current formatter
      */
-    public function findPks($keys, $con = null)
+    public function findPks($keys, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
@@ -194,27 +222,31 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
-     * @return ChildMondialRelayPickupAddressQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(MondialRelayPickupAddressTableMap::ID, $key, Criteria::EQUAL);
+        $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_ID, $key, Criteria::EQUAL);
+
+        return $this;
     }
 
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array|int $keys The list of primary key to use for the query
      *
-     * @return ChildMondialRelayPickupAddressQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(MondialRelayPickupAddressTableMap::ID, $keys, Criteria::IN);
+        $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_ID, $keys, Criteria::IN);
+
+        return $this;
     }
 
     /**
@@ -227,24 +259,24 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
      * $query->filterById(array('min' => 12)); // WHERE id > 12
      * </code>
      *
-     * @param     mixed $id The value to use as filter.
+     * @param mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayPickupAddressQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterById($id = null, $comparison = null)
+    public function filterById($id = null, ?string $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(MondialRelayPickupAddressTableMap::ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(MondialRelayPickupAddressTableMap::ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -255,7 +287,9 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayPickupAddressTableMap::ID, $id, $comparison);
+        $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_ID, $id, $comparison);
+
+        return $this;
     }
 
     /**
@@ -264,27 +298,26 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
      * Example usage:
      * <code>
      * $query->filterByJsonRelayData('fooValue');   // WHERE json_relay_data = 'fooValue'
-     * $query->filterByJsonRelayData('%fooValue%'); // WHERE json_relay_data LIKE '%fooValue%'
+     * $query->filterByJsonRelayData('%fooValue%', Criteria::LIKE); // WHERE json_relay_data LIKE '%fooValue%'
+     * $query->filterByJsonRelayData(['foo', 'bar']); // WHERE json_relay_data IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $jsonRelayData The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $jsonRelayData The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayPickupAddressQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByJsonRelayData($jsonRelayData = null, $comparison = null)
+    public function filterByJsonRelayData($jsonRelayData = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($jsonRelayData)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $jsonRelayData)) {
-                $jsonRelayData = str_replace('*', '%', $jsonRelayData);
-                $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(MondialRelayPickupAddressTableMap::JSON_RELAY_DATA, $jsonRelayData, $comparison);
+        $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_JSON_RELAY_DATA, $jsonRelayData, $comparison);
+
+        return $this;
     }
 
     /**
@@ -297,24 +330,24 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
      * $query->filterByOrderAddressId(array('min' => 12)); // WHERE order_address_id > 12
      * </code>
      *
-     * @param     mixed $orderAddressId The value to use as filter.
+     * @param mixed $orderAddressId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayPickupAddressQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByOrderAddressId($orderAddressId = null, $comparison = null)
+    public function filterByOrderAddressId($orderAddressId = null, ?string $comparison = null)
     {
         if (is_array($orderAddressId)) {
             $useMinMax = false;
             if (isset($orderAddressId['min'])) {
-                $this->addUsingAlias(MondialRelayPickupAddressTableMap::ORDER_ADDRESS_ID, $orderAddressId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_ORDER_ADDRESS_ID, $orderAddressId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($orderAddressId['max'])) {
-                $this->addUsingAlias(MondialRelayPickupAddressTableMap::ORDER_ADDRESS_ID, $orderAddressId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_ORDER_ADDRESS_ID, $orderAddressId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -325,20 +358,22 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayPickupAddressTableMap::ORDER_ADDRESS_ID, $orderAddressId, $comparison);
+        $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_ORDER_ADDRESS_ID, $orderAddressId, $comparison);
+
+        return $this;
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildMondialRelayPickupAddress $mondialRelayPickupAddress Object to remove from the list of results
+     * @param ChildMondialRelayPickupAddress $mondialRelayPickupAddress Object to remove from the list of results
      *
-     * @return ChildMondialRelayPickupAddressQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function prune($mondialRelayPickupAddress = null)
     {
         if ($mondialRelayPickupAddress) {
-            $this->addUsingAlias(MondialRelayPickupAddressTableMap::ID, $mondialRelayPickupAddress->getId(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(MondialRelayPickupAddressTableMap::COL_ID, $mondialRelayPickupAddress->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
@@ -350,16 +385,16 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public function doDeleteAll(ConnectionInterface $con = null)
+    public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayPickupAddressTableMap::DATABASE_NAME);
         }
-        $affectedRows = 0; // initialize var to track total num of affected rows
-        try {
-            // use transaction because $criteria could contain info
-            // for more than one table or we could emulating ON DELETE CASCADE, etc.
-            $con->beginTransaction();
+
+        // use transaction because $criteria could contain info
+        // for more than one table or we could emulating ON DELETE CASCADE, etc.
+        return $con->transaction(function () use ($con) {
+            $affectedRows = 0; // initialize var to track total num of affected rows
             $affectedRows += parent::doDeleteAll($con);
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
@@ -367,28 +402,21 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
             MondialRelayPickupAddressTableMap::clearInstancePool();
             MondialRelayPickupAddressTableMap::clearRelatedInstancePool();
 
-            $con->commit();
-        } catch (PropelException $e) {
-            $con->rollBack();
-            throw $e;
-        }
-
-        return $affectedRows;
+            return $affectedRows;
+        });
     }
 
     /**
-     * Performs a DELETE on the database, given a ChildMondialRelayPickupAddress or Criteria object OR a primary key value.
+     * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param mixed               $values Criteria or ChildMondialRelayPickupAddress object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         if supported by native driver or if emulated using Propel.
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
-     public function delete(ConnectionInterface $con = null)
-     {
+    public function delete(?ConnectionInterface $con = null): int
+    {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayPickupAddressTableMap::DATABASE_NAME);
         }
@@ -398,25 +426,18 @@ abstract class MondialRelayPickupAddressQuery extends ModelCriteria
         // Set the correct dbName
         $criteria->setDbName(MondialRelayPickupAddressTableMap::DATABASE_NAME);
 
-        $affectedRows = 0; // initialize var to track total num of affected rows
+        // use transaction because $criteria could contain info
+        // for more than one table or we could emulating ON DELETE CASCADE, etc.
+        return $con->transaction(function () use ($con, $criteria) {
+            $affectedRows = 0; // initialize var to track total num of affected rows
 
-        try {
-            // use transaction because $criteria could contain info
-            // for more than one table or we could emulating ON DELETE CASCADE, etc.
-            $con->beginTransaction();
-
-
-        MondialRelayPickupAddressTableMap::removeInstanceFromPool($criteria);
+            MondialRelayPickupAddressTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
             MondialRelayPickupAddressTableMap::clearRelatedInstancePool();
-            $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
-            $con->rollBack();
-            throw $e;
-        }
+        });
     }
 
-} // MondialRelayPickupAddressQuery
+}

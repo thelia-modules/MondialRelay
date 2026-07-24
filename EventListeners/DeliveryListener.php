@@ -8,6 +8,8 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay\EventListeners;
 
 use MondialRelay\ApiClient;
@@ -39,6 +41,7 @@ use Thelia\Model\CountryArea;
 use Thelia\Model\CountryAreaQuery;
 use Thelia\Model\CountryQuery;
 use Thelia\Model\ModuleQuery;
+use Thelia\Model\OrderAddress;
 use Thelia\Model\OrderAddressQuery;
 
 require __DIR__ . "/../vendor/autoload.php";
@@ -55,127 +58,6 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
-    }
-
-    /**
-     * @return ApiClient
-     * @throws \SoapFault
-     */
-    protected function getWebServiceClient()
-    {
-        return new ApiClient(
-            new \SoapClient(
-                MondialRelay::getConfigValue(MondialRelay::WEBSERVICE_URL)
-            ),
-            MondialRelay::getConfigValue(MondialRelay::CODE_ENSEIGNE),
-            MondialRelay::getConfigValue(MondialRelay::PRIVATE_KEY)
-        );
-    }
-
-    /**
-     * @param DeliveryPostageEvent $event
-     * @param $eventName
-     * @param EventDispatcherInterface $dispatcher
-     * @throws \Exception
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function processDeliveryPostageEvent(DeliveryPostageEvent $event, $eventName, EventDispatcherInterface $dispatcher)
-    {
-        $valid = false;
-
-        /** @var Request $session */
-        $request = $this->requestStack->getCurrentRequest();
-
-        /** @var Session $session */
-        $session = $request->getSession();
-
-        // Get and store selected delivery type, if it is defined
-        switch($request->get('mondial-relay-selected-delivery-mode')) {
-            case 'pickup':
-                $selectedDeliveryType = MondialRelayZoneConfiguration::RELAY_DELIVERY_TYPE;
-                break;
-            case 'home':
-                $selectedDeliveryType = MondialRelayZoneConfiguration::HOME_DELIVERY_TYPE;
-                break;
-            default:
-                $selectedDeliveryType = $session->get(MondialRelay::SESSION_SELECTED_DELIVERY_TYPE);
-        }
-
-        if (null !== $selectedDeliveryType) {
-            $session->set(MondialRelay::SESSION_SELECTED_DELIVERY_TYPE, $selectedDeliveryType);
-        }
-
-        // Use the minimum weight if the cart is below this minimum.
-        $weight = max(MondialRelay::MIN_WEIGHT_KG, $session->getSessionCart($dispatcher)->getWeight());
-
-        if ($weight <= MondialRelay::MAX_WEIGHT_KG) {
-            $moduleModel = ModuleQuery::create()->findOneByCode(MondialRelay::getModuleCode());
-
-            // Find all allowed delivery types for the destination country
-            $countryHasRelay = $countryHasHome = false;
-
-            $countryInAreaList = CountryAreaQuery::findByCountryAndState($event->getCountry(), $event->getState());
-
-            $price = PHP_INT_MAX;
-
-            /** @var CountryArea $countryInArea */
-            foreach ($countryInAreaList as $countryInArea) {
-                $areas = AreaDeliveryModuleQuery::create()->filterByAreaId($countryInArea->getAreaId())
-                    ->filterByModule($moduleModel)
-                    ->find();
-
-                /** @var AreaDeliveryModule $area */
-                foreach ($areas as $area) {
-                    if (null !== $zoneConfig = MondialRelayZoneConfigurationQuery::create()->findOneByAreaId($area->getAreaId())) {
-                        $zoneDeliveryType = $zoneConfig->getDeliveryType();
-
-                        switch ($zoneDeliveryType) {
-                            case MondialRelayZoneConfiguration::ALL_DELIVERY_TYPE:
-                                $countryHasRelay = $countryHasHome = true;
-                                break;
-                            case MondialRelayZoneConfiguration::HOME_DELIVERY_TYPE:
-                                $countryHasHome = true;
-                                break;
-                            case MondialRelayZoneConfiguration::RELAY_DELIVERY_TYPE:
-                                $countryHasRelay = true;
-                                break;
-                        }
-
-                        // If the area delivery type matches the selected one, or if no zone is selected
-                        if (null === $selectedDeliveryType || $zoneDeliveryType === $selectedDeliveryType) {
-                            // Check if we have a price slice
-                            if (null !== $deliveryPrice = MondialRelayDeliveryPriceQuery::create()
-                                    ->filterByAreaId($area->getAreaId())
-                                    ->filterByMaxWeight($weight, Criteria::GREATER_EQUAL)
-                                    ->orderByMaxWeight(Criteria::ASC)
-                                    ->findOne()) {
-                                $price = min($price, $deliveryPrice->getPriceWithTax());
-
-                                $deliveryDelay = $zoneConfig->getDeliveryTime();
-                            }
-                        }
-                    }
-                }
-            }
-
-            $relayAllowed = MondialRelay::getConfigValue(MondialRelay::ALLOW_RELAY_DELIVERY, true);
-            $homeAllowed = MondialRelay::getConfigValue(MondialRelay::ALLOW_HOME_DELIVERY, true);
-
-            if (($countryHasHome && $homeAllowed) || ($countryHasRelay && $relayAllowed) && $price !== PHP_INT_MAX) {
-                // The module could be used !
-                $valid = true;
-
-                $deliveryDate = (new \DateTime())->add(new \DateInterval("P" . $deliveryDelay . "D"));
-
-                $event
-                    ->setPostage($price)
-                    ->setDeliveryDate($deliveryDate);
-            }
-        }
-
-        $event->setValidModule($valid);
-
-        $event->stopPropagation();
     }
 
     protected function makeHoraire($str)
@@ -210,11 +92,9 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
                 MondialRelay::getConfigValue(MondialRelay::PRIVATE_KEY)
             );
 
-            $cartWeightInGrammes = 1000 * $this->requestStack
-                ->getCurrentRequest()
-                ->getSession()
-                ->getSessionCart($dispatcher)
-                ->getWeight();
+            $session = $this->requestStack->getCurrentRequest()?->getSession();
+            $cartWeight = $session instanceof Session ? $session->getSessionCart($dispatcher)->getWeight() : 0;
+            $cartWeightInGrammes = 1000 * $cartWeight;
 
             $requestParams = [
                 'NumPointRelais' => $event->getNumPointRelais(),
@@ -250,21 +130,22 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
                 'zipcode' => $point->cp(),
                 'city' => $point->city(),
                 'country' => $point->country(),
-                'distance' => $point->distance(),
-                'distance_km' => round($point->distance() / 1000, 1)
+                // The bundled Mondial Relay SOAP client does not expose a distance value.
+                'distance' => null,
+                'distance_km' => null
             ];
 
             $addresses = $point->address();
 
             $nom = $addresses[0];
-            if (! empty($adresses[1])) {
+            if (! empty($addresses[1])) {
                 $nom .= '<br> ' . $addresses[1];
             }
 
             $normalizedPoint["name"] = $nom;
 
             $address = $addresses[2];
-            if (! empty($adresses[3])) {
+            if (! empty($addresses[3])) {
                 $address .= '<br> ' . $addresses[3];
             }
 
@@ -304,67 +185,117 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
     }
 
     /**
-     * Update the order delivery address with MondialRelay point data
+     * Update the order delivery address with the selected Mondial Relay point.
+     * The selection comes either from the Flexy front ('pickup' session key, a serialized
+     * DeliveryPickupLocation) or from the legacy Smarty front (MondialRelayPickupAddress record).
      *
-     * @param OrderEvent $event
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function updateOrderDeliveryAddress(OrderEvent $event)
+    public function updateOrderDeliveryAddress(OrderEvent $event): void
     {
-        /** @var Session $session */
-        $session = $this->requestStack->getCurrentRequest()->getSession();
+        if ($event->getOrder()->getDeliveryModuleId() !== MondialRelay::getModuleId()) {
+            return;
+        }
 
+        $session = $this->requestStack->getCurrentRequest()?->getSession();
+        if (!$session instanceof Session) {
+            return;
+        }
+
+        if (null === $orderAddress = OrderAddressQuery::create()->findPk($event->getOrder()->getDeliveryOrderAddressId())) {
+            return;
+        }
+
+        // Flexy front: the selected DeliveryPickupLocation is stored in the 'pickup' session key.
+        $pickup = $session->get('pickup');
+        if (\is_array($pickup) && isset($pickup['address']) && \is_array($pickup['address'])) {
+            $address = $pickup['address'];
+            $this->applyRelayToAddress($orderAddress, [
+                'name' => (string) ($address['title'] ?? $address['company'] ?? ($pickup['title'] ?? '')),
+                'id' => (string) ($pickup['id'] ?? ''),
+                'address' => (string) ($address['address1'] ?? ''),
+                'zipcode' => (string) ($address['zipCode'] ?? ''),
+                'city' => (string) ($address['city'] ?? ''),
+                'country' => (string) ($address['countryCode'] ?? ''),
+            ]);
+
+            return;
+        }
+
+        // Legacy Smarty front: relay data stored in a MondialRelayPickupAddress record.
         if (null !== $mrAddressId = $session->get(MondialRelay::SESSION_SELECTED_PICKUP_RELAY_ID)) {
             if (null !== $mrRelayPickup = MondialRelayPickupAddressQuery::create()->findPk($mrAddressId)) {
-                if (false !== $relayData = json_decode($mrRelayPickup->getJsonRelayData(), true)) {
-                    if (null !== $orderAddress = OrderAddressQuery::create()->findPK($event->getOrder()->getDeliveryOrderAddressId())) {
-                        $orderAddress
-                            ->setCompany($relayData['name'])
-                            ->setFirstname(
-                                Translator::getInstance()->trans(
-                                    "Pickup relay #%number",
-                                    [ '%number' => $relayData['id']],
-                                    MondialRelay::DOMAIN_NAME
-                                )
-                            )
-                            ->setLastname('')
-                            ->setAddress1($relayData['address'])
-                            ->setAddress2('')
-                            ->setAddress3('')
-                            ->setZipcode($relayData['zipcode'])
-                            ->setCity($relayData['city'])
-                            ->setCountry(CountryQuery::create()->findOneByIsoalpha2($relayData['country']))
-                            ->save();
+                $relayData = json_decode((string) $mrRelayPickup->getJsonRelayData(), true);
+                if (\is_array($relayData)) {
+                    $this->applyRelayToAddress($orderAddress, [
+                        'name' => (string) ($relayData['name'] ?? ''),
+                        'id' => (string) ($relayData['id'] ?? ''),
+                        'address' => (string) ($relayData['address'] ?? ''),
+                        'zipcode' => (string) ($relayData['zipcode'] ?? ''),
+                        'city' => (string) ($relayData['city'] ?? ''),
+                        'country' => (string) ($relayData['country'] ?? ''),
+                    ]);
 
-                        $mrRelayPickup
-                            ->setOrderAddressId($orderAddress->getId())
-                            ->save();
-                    }
+                    $mrRelayPickup->setOrderAddressId($orderAddress->getId())->save();
                 }
             }
         }
     }
 
     /**
-     * @param OrderEvent $event
+     * @param array{name: string, id: string, address: string, zipcode: string, city: string, country: string} $relay
+     *
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function updateCurrentDeliveryAddress(OrderEvent $event, $eventName, EventDispatcherInterface $dispatcher)
+    private function applyRelayToAddress(OrderAddress $orderAddress, array $relay): void
     {
-        /** @var Request $request */
-        $request = $this->requestStack->getCurrentRequest();
-
-        /** @var Session $session */
-        $session = $request->getSession();
-
-        // Reset stored pickup address, if any
-        if (null !== $mrAddressId = $session->remove(MondialRelay::SESSION_SELECTED_PICKUP_RELAY_ID)) {
-            // Do not delete, as the customer may have do a back, and restart another order
-            // MondialRelayPickupAddressQuery::create()->filterById($mrAddressId)->delete();
+        // Guard: an unknown/empty country code would set a null country and break the NOT NULL FK on save.
+        $country = CountryQuery::create()->findOneByIsoalpha2($relay['country']);
+        if (null === $country) {
+            return;
         }
 
+        $orderAddress
+            ->setCompany($relay['name'])
+            ->setFirstname(
+                Translator::getInstance()->trans(
+                    'Pickup relay #%number',
+                    ['%number' => $relay['id']],
+                    MondialRelay::DOMAIN_NAME
+                )
+            )
+            ->setLastname('')
+            ->setAddress1($relay['address'])
+            ->setAddress2('')
+            ->setAddress3('')
+            ->setZipcode($relay['zipcode'])
+            ->setCity($relay['city'])
+            ->setCountry($country)
+            ->save();
+    }
+
+    /**
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function updateCurrentDeliveryAddress(OrderEvent $event, $eventName, EventDispatcherInterface $dispatcher): void
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            return;
+        }
+
+        $session = $request->getSession();
+
+        // Reset stored legacy pickup address, if any (kept, so a customer restarting an order is clean).
+        $session->remove(MondialRelay::SESSION_SELECTED_PICKUP_RELAY_ID);
+
         if ($event->getDeliveryModule() == MondialRelay::getModuleId()) {
-            // Check selected MondialRlay mode
+            // Flexy front: the selection is already stored in the 'pickup' session by the LiveComponent.
+            if ($session->get('pickup')) {
+                return;
+            }
+
+            // Check selected MondialRelay mode (legacy Smarty front)
             $mode = $request->get('mondial-relay-selected-delivery-mode');
 
             if ($mode == 'pickup') {
@@ -376,7 +307,7 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
                     $relayDataEvent = new FindRelayEvent($countryId, '', '', 0);
                     $relayDataEvent->setNumPointRelais($relayId);
 
-                    $dispatcher->dispatch(MondialRelayEvents::FIND_RELAYS, $relayDataEvent);
+                    $dispatcher->dispatch($relayDataEvent, MondialRelayEvents::FIND_RELAYS);
 
                     // We're supposed to get only one point
                     $points = $relayDataEvent->getPoints();
@@ -415,13 +346,10 @@ class DeliveryListener extends BaseAction implements EventSubscriberInterface
         $session->remove(MondialRelay::SESSION_SELECTED_PICKUP_RELAY_ID);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
+        // Postage/validity are now computed by MondialRelay::getPostage()/isValidDelivery() (T3).
         return [
-            TheliaEvents::getModuleEvent(
-                TheliaEvents::MODULE_DELIVERY_GET_POSTAGE,
-                MondialRelay::getModuleCode()
-            ) => [ "processDeliveryPostageEvent", 128 ],
             TheliaEvents::ORDER_SET_DELIVERY_MODULE => ['updateCurrentDeliveryAddress', 64],
             TheliaEvents::ORDER_BEFORE_PAYMENT => ['updateOrderDeliveryAddress', 256],
             TheliaEvents::ORDER_CART_CLEAR => ['clearDeliveryData', 256],

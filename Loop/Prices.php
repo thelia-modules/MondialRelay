@@ -13,6 +13,7 @@ namespace MondialRelay\Loop;
 use MondialRelay\Model\MondialRelayDeliveryPrice;
 use MondialRelay\Model\MondialRelayDeliveryPriceQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Thelia\Core\Template\Element\BaseLoop;
 use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
@@ -23,14 +24,14 @@ use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 /**
  * Class Prices
  * @package MondialRelay\Loop
- * @method int getAreaId()
+ * @method int[]|null getAreaId()
  */
 class Prices extends BaseLoop implements PropelSearchLoopInterface
 {
     /**
      * @return \Thelia\Core\Template\Loop\Argument\ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('area_id')
@@ -38,7 +39,7 @@ class Prices extends BaseLoop implements PropelSearchLoopInterface
     }
 
 
-    public function buildModelCriteria()
+    public function buildModelCriteria(): ModelCriteria
     {
         $query = MondialRelayDeliveryPriceQuery::create();
 
@@ -51,7 +52,7 @@ class Prices extends BaseLoop implements PropelSearchLoopInterface
         return $query;
     }
 
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         /** @var MondialRelayDeliveryPrice $item */
         foreach ($loopResult->getResultDataCollection() as $item) {

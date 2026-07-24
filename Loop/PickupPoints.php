@@ -25,16 +25,16 @@ require __DIR__ . "/../vendor/autoload.php";
  * Class Prices
  * @package MondialRelay\Loop
  * @method int getCountryId()
- * @method int getCity()
+ * @method string getCity()
  * @method string getZipcode()
- * @method string getSearchRadius()
+ * @method float getSearchRadius()
  */
 class PickupPoints extends BaseLoop implements ArraySearchLoopInterface
 {
     /**
      * @return \Thelia\Core\Template\Loop\Argument\ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntTypeArgument('country_id', null, true),
@@ -50,7 +50,7 @@ class PickupPoints extends BaseLoop implements ArraySearchLoopInterface
      * @throws \Exception
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function buildArray()
+    public function buildArray(): array
     {
         $event = new FindRelayEvent(
             $this->getCountryId(),
@@ -59,12 +59,12 @@ class PickupPoints extends BaseLoop implements ArraySearchLoopInterface
             $this->getSearchRadius()
         );
 
-        $this->dispatcher->dispatch(MondialRelayEvents::FIND_RELAYS, $event);
+        $this->dispatcher->dispatch($event, MondialRelayEvents::FIND_RELAYS);
 
         return $event->getPoints();
     }
 
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         foreach ($loopResult->getResultDataCollection() as $item) {
             $loopResultRow = new LoopResultRow($item);
