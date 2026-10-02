@@ -8,10 +8,14 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay\Form;
 
 use MondialRelay\Model\MondialRelayZoneConfiguration;
 use MondialRelay\MondialRelay;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Thelia\Form\BaseForm;
 
@@ -20,28 +24,33 @@ use Thelia\Form\BaseForm;
  */
 class PriceAttributesUpdateForm extends BaseForm
 {
-    protected function buildForm()
+    public static function getName(): string
+    {
+        return 'mondialrelay-area-attributes-form';
+    }
+
+    protected function buildForm(): void
     {
         $this->formBuilder
             ->add(
                 'delivery_time',
-                'integer',
+                IntegerType::class,
                 [
-                    "constraints" => [new GreaterThan([ 'value' => 0 ])],
+                    'constraints' => [new GreaterThan(['value' => 0])],
                     'label' => $this->translator->trans('Delivery delay', [], MondialRelay::DOMAIN_NAME),
                 ]
-            )->add(
+            )
+            ->add(
                 'delivery_type',
-                'choice',
+                ChoiceType::class,
                 [
-                    "choices" => [
-                        MondialRelayZoneConfiguration::RELAY_DELIVERY_TYPE => $this->translator->trans('Relay delivery', [], MondialRelay::DOMAIN_NAME),
-                        MondialRelayZoneConfiguration::HOME_DELIVERY_TYPE => $this->translator->trans('Home delivery', [], MondialRelay::DOMAIN_NAME),
-                        MondialRelayZoneConfiguration::ALL_DELIVERY_TYPE => $this->translator->trans('Home and relay delivery', [], MondialRelay::DOMAIN_NAME)
+                    'choices' => [
+                        $this->translator->trans('Relay delivery', [], MondialRelay::DOMAIN_NAME) => MondialRelayZoneConfiguration::RELAY_DELIVERY_TYPE,
+                        $this->translator->trans('Home delivery', [], MondialRelay::DOMAIN_NAME) => MondialRelayZoneConfiguration::HOME_DELIVERY_TYPE,
+                        $this->translator->trans('Home and relay delivery', [], MondialRelay::DOMAIN_NAME) => MondialRelayZoneConfiguration::ALL_DELIVERY_TYPE,
                     ],
                     'label' => $this->translator->trans('Delivery type', [], MondialRelay::DOMAIN_NAME),
                 ]
-            )
-        ;
+            );
     }
 }

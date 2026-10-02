@@ -23,6 +23,7 @@ use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
 use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
+use Thelia\Core\HttpFoundation\Session\Session;
 use Thelia\Model\AreaDeliveryModuleQuery;
 use Thelia\Model\Cart;
 use Thelia\Model\CountryArea;
@@ -37,7 +38,7 @@ use Thelia\Type\TypeCollection;
  * Class Prices
  * @package MondialRelay\Loop
  * @method int getCountryId()
- * @method int getStateId()
+ * @method int|null getStateId()
  * @method string getMode()
  * @method string getInsurance()
  */
@@ -46,7 +47,7 @@ class DeliveryPrice extends BaseLoop implements ArraySearchLoopInterface
     /**
      * @return \Thelia\Core\Template\Loop\Argument\ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntTypeArgument('country_id', null, true),
@@ -68,24 +69,25 @@ class DeliveryPrice extends BaseLoop implements ArraySearchLoopInterface
      * @throws \Exception
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function buildArray()
+    public function buildArray(): array
     {
         $results = [];
 
         if (null !== $country = CountryQuery::create()->findPk($this->getCountryId())) {
             if (null !== $stateId = $this->getStateId()) {
-                $state = StateQuery::create()->findPk($this->$stateId());
+                $state = StateQuery::create()->findPk($stateId);
             } else {
                 $state = null;
             }
 
             $mode = $this->getMode();
+            $deliveryType = MondialRelayZoneConfiguration::ALL_DELIVERY_TYPE;
 
             switch ($mode) {
                 case 'home':
                     $deliveryType = MondialRelayZoneConfiguration::HOME_DELIVERY_TYPE;
 
-                    if (! MondialRelay::getConfigValue(MondialRelay::ALLOW_HOME_DELIVERY, true)) {
+                    if (! MondialRelay::getConfigValue(MondialRelay::ALLOW_HOME_DELIVERY, '1')) {
                         return [];
                     }
                     break;
@@ -93,7 +95,7 @@ class DeliveryPrice extends BaseLoop implements ArraySearchLoopInterface
                 case 'relay':
                     $deliveryType = MondialRelayZoneConfiguration::RELAY_DELIVERY_TYPE;
 
-                    if (! MondialRelay::getConfigValue(MondialRelay::ALLOW_RELAY_DELIVERY, true)) {
+                    if (! MondialRelay::getConfigValue(MondialRelay::ALLOW_RELAY_DELIVERY, '1')) {
                         return [];
                     }
                     break;
@@ -128,12 +130,12 @@ class DeliveryPrice extends BaseLoop implements ArraySearchLoopInterface
                     ->filterByDeliveryType($deliveryType)
                     ->find();
 
-            /** @var Cart $cart */
-            $cart = $this->requestStack
-                ->getCurrentRequest()
-                ->getSession()
-                ->getSessionCart($this->dispatcher)
-                ;
+            $session = $this->requestStack->getCurrentRequest()?->getSession();
+            $cart = $session instanceof Session ? $session->getSessionCart($this->dispatcher) : null;
+
+            if (null === $cart) {
+                return $results;
+            }
 
             $cartWeight = $cart->getWeight();
             $cartValue = $cart->getTaxedAmount($country);
@@ -191,11 +193,10 @@ class DeliveryPrice extends BaseLoop implements ArraySearchLoopInterface
         return $results;
     }
 
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
-        /** @var MondialRelayDeliveryPrice $item */
         foreach ($loopResult->getResultDataCollection() as $resultItem) {
-            $loopResultRow = new LoopResultRow($item);
+            $loopResultRow = new LoopResultRow($resultItem);
 
             foreach ($resultItem as $name => $value) {
                 $loopResultRow->set($name, $value);

@@ -8,36 +8,40 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay\Controller\BackOffice;
 
+use MondialRelay\Form\SettingsForm;
 use MondialRelay\MondialRelay;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Log\Tlog;
+use Thelia\Tools\URL;
 
 /**
  * @author Franck Allimant <franck@cqfdev.fr>
  */
 class ConfigurationController extends BaseAdminController
 {
-    public function saveAction()
+    public function saveAction(): Response
     {
         if (null !== $response = $this->checkAuth(AdminResources::MODULE, 'MondialRelay', AccessManager::UPDATE)) {
             return $response;
         }
 
-        $form = $this->createForm('mondialrelay.settings_form');
+        $form = $this->createForm(SettingsForm::getName());
 
-        $errorMessage = false;
+        $errorMessage = null;
 
         try {
-            $viewForm = $this->validateForm($form);
-
-            $data = $viewForm->getData();
+            $data = $this->validateForm($form)->getData();
 
             foreach ($data as $name => $value) {
-                MondialRelay::setConfigValue($name, $value);
+                MondialRelay::setConfigValue($name, (string) $value);
             }
         } catch (\Exception $ex) {
             $errorMessage = $ex->getMessage();
@@ -45,6 +49,20 @@ class ConfigurationController extends BaseAdminController
             Tlog::getInstance()->error("Failed to validate configuration form: $errorMessage");
         }
 
-        return $this->render('mondialrelay/ajax/general', [ 'error_message' => $errorMessage ]);
+        return $this->redirectToConfiguration('general', $errorMessage);
+    }
+
+    private function redirectToConfiguration(string $tab, ?string $errorMessage): Response
+    {
+        if (null !== $errorMessage) {
+            $session = $this->getSession();
+            if ($session instanceof FlashBagAwareSessionInterface) {
+                $session->getFlashBag()->add('danger', $errorMessage);
+            }
+        }
+
+        return $this->generateRedirect(
+            URL::getInstance()->absoluteUrl('/admin/module/MondialRelay', ['tab' => $tab])
+        );
     }
 }

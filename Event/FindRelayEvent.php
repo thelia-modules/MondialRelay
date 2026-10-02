@@ -37,7 +37,7 @@ class FindRelayEvent extends ActionEvent
     /** @var string */
     protected $numPointRelais = '';
 
-    /** @var bool  */
+    /** @var string */
     protected $error = '';
 
     /**

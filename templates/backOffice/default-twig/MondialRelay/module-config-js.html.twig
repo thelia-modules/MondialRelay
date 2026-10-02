@@ -1,0 +1,30 @@
+<script>
+(function () {
+    'use strict';
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var tpl = document.getElementById('mr-price-row-tpl');
+
+        document.addEventListener('click', function (e) {
+            // Add a blank price line
+            var addBtn = e.target.closest('.js-mr-add-row');
+            if (addBtn) {
+                e.preventDefault();
+                var table = addBtn.closest('table');
+                if (!table || !tpl) return;
+                var tbody = table.querySelector('tbody');
+                if (tbody) tbody.appendChild(tpl.content.cloneNode(true));
+                return;
+            }
+
+            // Remove a price line (client-side; persisted on "Save changes")
+            var removeBtn = e.target.closest('.js-mr-remove-row');
+            if (removeBtn) {
+                e.preventDefault();
+                var row = removeBtn.closest('tr');
+                if (row) row.parentNode.removeChild(row);
+            }
+        });
+    });
+}());
+</script>

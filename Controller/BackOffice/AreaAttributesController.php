@@ -8,34 +8,38 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay\Controller\BackOffice;
 
+use MondialRelay\Form\PriceAttributesUpdateForm;
 use MondialRelay\Model\MondialRelayZoneConfiguration;
 use MondialRelay\Model\MondialRelayZoneConfigurationQuery;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Log\Tlog;
+use Thelia\Tools\URL;
 
 /**
  * @author Franck Allimant <franck@cqfdev.fr>
  */
 class AreaAttributesController extends BaseAdminController
 {
-    public function saveAction($areaId, $moduleId)
+    public function saveAction(int $areaId, int $moduleId): Response
     {
         if (null !== $response = $this->checkAuth(AdminResources::MODULE, 'MondialRelay', AccessManager::UPDATE)) {
             return $response;
         }
 
-        $form = $this->createForm('mondialrelay.area_attributes_update_form');
+        $form = $this->createForm(PriceAttributesUpdateForm::getName());
 
-        $errorMessage = false;
+        $errorMessage = null;
 
         try {
-            $viewForm = $this->validateForm($form);
-
-            $data = $viewForm->getData();
+            $data = $this->validateForm($form)->getData();
 
             if (null === $zoneConfig = MondialRelayZoneConfigurationQuery::create()->findOneByAreaId($areaId)) {
                 $zoneConfig = new MondialRelayZoneConfiguration();
@@ -43,19 +47,24 @@ class AreaAttributesController extends BaseAdminController
 
             $zoneConfig
                 ->setAreaId($areaId)
-                ->setDeliveryTime($data['delivery_time'])
-                ->setDeliveryType($data['delivery_type'])
+                ->setDeliveryTime((int) $data['delivery_time'])
+                ->setDeliveryType((int) $data['delivery_type'])
                 ->save();
-
         } catch (\Exception $ex) {
             $errorMessage = $ex->getMessage();
 
             Tlog::getInstance()->error("Failed to validate area attributes form: $errorMessage");
         }
 
-        return $this->render('mondialrelay/ajax/prices', [
-            'module_id' => $moduleId,
-            'error_message' => $errorMessage
-        ]);
+        if (null !== $errorMessage) {
+            $session = $this->getSession();
+            if ($session instanceof FlashBagAwareSessionInterface) {
+                $session->getFlashBag()->add('danger', $errorMessage);
+            }
+        }
+
+        return $this->generateRedirect(
+            URL::getInstance()->absoluteUrl('/admin/module/MondialRelay', ['tab' => 'prices'])
+        );
     }
 }

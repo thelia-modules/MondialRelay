@@ -18,9 +18,7 @@ use Propel\Runtime\Exception\PropelException;
 use Thelia\Model\Area;
 
 /**
- * Base class that represents a query for the 'mondial_relay_zone_configuration' table.
- *
- *
+ * Base class that represents a query for the `mondial_relay_zone_configuration` table.
  *
  * @method     ChildMondialRelayZoneConfigurationQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildMondialRelayZoneConfigurationQuery orderByDeliveryTime($order = Criteria::ASC) Order by the delivery_time column
@@ -36,35 +34,65 @@ use Thelia\Model\Area;
  * @method     ChildMondialRelayZoneConfigurationQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildMondialRelayZoneConfigurationQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     ChildMondialRelayZoneConfigurationQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
+ * @method     ChildMondialRelayZoneConfigurationQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
+ * @method     ChildMondialRelayZoneConfigurationQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ *
  * @method     ChildMondialRelayZoneConfigurationQuery leftJoinArea($relationAlias = null) Adds a LEFT JOIN clause to the query using the Area relation
  * @method     ChildMondialRelayZoneConfigurationQuery rightJoinArea($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Area relation
  * @method     ChildMondialRelayZoneConfigurationQuery innerJoinArea($relationAlias = null) Adds a INNER JOIN clause to the query using the Area relation
  *
- * @method     ChildMondialRelayZoneConfiguration findOne(ConnectionInterface $con = null) Return the first ChildMondialRelayZoneConfiguration matching the query
- * @method     ChildMondialRelayZoneConfiguration findOneOrCreate(ConnectionInterface $con = null) Return the first ChildMondialRelayZoneConfiguration matching the query, or a new ChildMondialRelayZoneConfiguration object populated from the query conditions when no match is found
+ * @method     ChildMondialRelayZoneConfigurationQuery joinWithArea($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Area relation
  *
- * @method     ChildMondialRelayZoneConfiguration findOneById(int $id) Return the first ChildMondialRelayZoneConfiguration filtered by the id column
- * @method     ChildMondialRelayZoneConfiguration findOneByDeliveryTime(int $delivery_time) Return the first ChildMondialRelayZoneConfiguration filtered by the delivery_time column
- * @method     ChildMondialRelayZoneConfiguration findOneByDeliveryType(int $delivery_type) Return the first ChildMondialRelayZoneConfiguration filtered by the delivery_type column
- * @method     ChildMondialRelayZoneConfiguration findOneByAreaId(int $area_id) Return the first ChildMondialRelayZoneConfiguration filtered by the area_id column
+ * @method     ChildMondialRelayZoneConfigurationQuery leftJoinWithArea() Adds a LEFT JOIN clause and with to the query using the Area relation
+ * @method     ChildMondialRelayZoneConfigurationQuery rightJoinWithArea() Adds a RIGHT JOIN clause and with to the query using the Area relation
+ * @method     ChildMondialRelayZoneConfigurationQuery innerJoinWithArea() Adds a INNER JOIN clause and with to the query using the Area relation
  *
- * @method     array findById(int $id) Return ChildMondialRelayZoneConfiguration objects filtered by the id column
- * @method     array findByDeliveryTime(int $delivery_time) Return ChildMondialRelayZoneConfiguration objects filtered by the delivery_time column
- * @method     array findByDeliveryType(int $delivery_type) Return ChildMondialRelayZoneConfiguration objects filtered by the delivery_type column
- * @method     array findByAreaId(int $area_id) Return ChildMondialRelayZoneConfiguration objects filtered by the area_id column
+ * @method     \Thelia\Model\AreaQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
+ * @method     ChildMondialRelayZoneConfiguration|null findOne(?ConnectionInterface $con = null) Return the first ChildMondialRelayZoneConfiguration matching the query
+ * @method     ChildMondialRelayZoneConfiguration findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildMondialRelayZoneConfiguration matching the query, or a new ChildMondialRelayZoneConfiguration object populated from the query conditions when no match is found
+ *
+ * @method     ChildMondialRelayZoneConfiguration|null findOneById(int $id) Return the first ChildMondialRelayZoneConfiguration filtered by the id column
+ * @method     ChildMondialRelayZoneConfiguration|null findOneByDeliveryTime(int $delivery_time) Return the first ChildMondialRelayZoneConfiguration filtered by the delivery_time column
+ * @method     ChildMondialRelayZoneConfiguration|null findOneByDeliveryType(int $delivery_type) Return the first ChildMondialRelayZoneConfiguration filtered by the delivery_type column
+ * @method     ChildMondialRelayZoneConfiguration|null findOneByAreaId(int $area_id) Return the first ChildMondialRelayZoneConfiguration filtered by the area_id column
+ *
+ * @method     ChildMondialRelayZoneConfiguration requirePk($key, ?ConnectionInterface $con = null) Return the ChildMondialRelayZoneConfiguration by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayZoneConfiguration requireOne(?ConnectionInterface $con = null) Return the first ChildMondialRelayZoneConfiguration matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildMondialRelayZoneConfiguration requireOneById(int $id) Return the first ChildMondialRelayZoneConfiguration filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayZoneConfiguration requireOneByDeliveryTime(int $delivery_time) Return the first ChildMondialRelayZoneConfiguration filtered by the delivery_time column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayZoneConfiguration requireOneByDeliveryType(int $delivery_type) Return the first ChildMondialRelayZoneConfiguration filtered by the delivery_type column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMondialRelayZoneConfiguration requireOneByAreaId(int $area_id) Return the first ChildMondialRelayZoneConfiguration filtered by the area_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildMondialRelayZoneConfiguration[]|Collection find(?ConnectionInterface $con = null) Return ChildMondialRelayZoneConfiguration objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildMondialRelayZoneConfiguration> find(?ConnectionInterface $con = null) Return ChildMondialRelayZoneConfiguration objects based on current ModelCriteria
+ *
+ * @method     ChildMondialRelayZoneConfiguration[]|Collection findById(int|array<int> $id) Return ChildMondialRelayZoneConfiguration objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayZoneConfiguration> findById(int|array<int> $id) Return ChildMondialRelayZoneConfiguration objects filtered by the id column
+ * @method     ChildMondialRelayZoneConfiguration[]|Collection findByDeliveryTime(int|array<int> $delivery_time) Return ChildMondialRelayZoneConfiguration objects filtered by the delivery_time column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayZoneConfiguration> findByDeliveryTime(int|array<int> $delivery_time) Return ChildMondialRelayZoneConfiguration objects filtered by the delivery_time column
+ * @method     ChildMondialRelayZoneConfiguration[]|Collection findByDeliveryType(int|array<int> $delivery_type) Return ChildMondialRelayZoneConfiguration objects filtered by the delivery_type column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayZoneConfiguration> findByDeliveryType(int|array<int> $delivery_type) Return ChildMondialRelayZoneConfiguration objects filtered by the delivery_type column
+ * @method     ChildMondialRelayZoneConfiguration[]|Collection findByAreaId(int|array<int> $area_id) Return ChildMondialRelayZoneConfiguration objects filtered by the area_id column
+ * @psalm-method Collection&\Traversable<ChildMondialRelayZoneConfiguration> findByAreaId(int|array<int> $area_id) Return ChildMondialRelayZoneConfiguration objects filtered by the area_id column
+ *
+ * @method     ChildMondialRelayZoneConfiguration[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildMondialRelayZoneConfiguration> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  */
 abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \MondialRelay\Model\Base\MondialRelayZoneConfigurationQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName The database name
+     * @param string $modelName The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'thelia', $modelName = '\\MondialRelay\\Model\\MondialRelayZoneConfiguration', $modelAlias = null)
+    public function __construct($dbName = 'TheliaMain', $modelName = '\\MondialRelay\\Model\\MondialRelayZoneConfiguration', ?string $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -72,17 +100,17 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
     /**
      * Returns a new ChildMondialRelayZoneConfigurationQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string $modelAlias The alias of a model in the query
+     * @param Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildMondialRelayZoneConfigurationQuery
      */
-    public static function create($modelAlias = null, $criteria = null)
+    public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
-        if ($criteria instanceof \MondialRelay\Model\MondialRelayZoneConfigurationQuery) {
+        if ($criteria instanceof ChildMondialRelayZoneConfigurationQuery) {
             return $criteria;
         }
-        $query = new \MondialRelay\Model\MondialRelayZoneConfigurationQuery();
+        $query = new ChildMondialRelayZoneConfigurationQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -107,40 +135,48 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
      *
      * @return ChildMondialRelayZoneConfiguration|array|mixed the result, formatted by the current formatter
      */
-    public function findPk($key, $con = null)
+    public function findPk($key, ?ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = MondialRelayZoneConfigurationTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
-            // the object is already in the instance pool
-            return $obj;
-        }
+
         if ($con === null) {
             $con = Propel::getServiceContainer()->getReadConnection(MondialRelayZoneConfigurationTableMap::DATABASE_NAME);
         }
+
         $this->basePreSelect($con);
-        if ($this->formatter || $this->modelAlias || $this->with || $this->select
-         || $this->selectColumns || $this->asColumns || $this->selectModifiers
-         || $this->map || $this->having || $this->joins) {
+
+        if (
+            $this->formatter || $this->modelAlias || $this->with || $this->select
+            || $this->selectColumns || $this->asColumns || $this->selectModifiers
+            || $this->map || $this->having || $this->joins
+        ) {
             return $this->findPkComplex($key, $con);
-        } else {
-            return $this->findPkSimple($key, $con);
         }
+
+        if ((null !== ($obj = MondialRelayZoneConfigurationTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
+            // the object is already in the instance pool
+            return $obj;
+        }
+
+        return $this->findPkSimple($key, $con);
     }
 
     /**
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
-     * @return   ChildMondialRelayZoneConfiguration A model object, or null if the key is not found
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildMondialRelayZoneConfiguration A model object, or null if the key is not found
      */
-    protected function findPkSimple($key, $con)
+    protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, DELIVERY_TIME, DELIVERY_TYPE, AREA_ID FROM mondial_relay_zone_configuration WHERE ID = :p0';
+        $sql = 'SELECT `id`, `delivery_time`, `delivery_type`, `area_id` FROM `mondial_relay_zone_configuration` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -151,9 +187,10 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+            /** @var ChildMondialRelayZoneConfiguration $obj */
             $obj = new ChildMondialRelayZoneConfiguration();
             $obj->hydrate($row);
-            MondialRelayZoneConfigurationTableMap::addInstanceToPool($obj, (string) $key);
+            MondialRelayZoneConfigurationTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
         }
         $stmt->closeCursor();
 
@@ -163,12 +200,12 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildMondialRelayZoneConfiguration|array|mixed the result, formatted by the current formatter
      */
-    protected function findPkComplex($key, $con)
+    protected function findPkComplex($key, ConnectionInterface $con)
     {
         // As the query uses a PK condition, no limit(1) is necessary.
         $criteria = $this->isKeepQuery() ? clone $this : $this;
@@ -184,12 +221,12 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array $keys Primary keys to use for the query
+     * @param ConnectionInterface $con an optional connection object
      *
-     * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
+     * @return Collection|array|mixed the list of results, formatted by the current formatter
      */
-    public function findPks($keys, $con = null)
+    public function findPks($keys, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
@@ -206,27 +243,31 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
-     * @return ChildMondialRelayZoneConfigurationQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::ID, $key, Criteria::EQUAL);
+        $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_ID, $key, Criteria::EQUAL);
+
+        return $this;
     }
 
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array|int $keys The list of primary key to use for the query
      *
-     * @return ChildMondialRelayZoneConfigurationQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::ID, $keys, Criteria::IN);
+        $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_ID, $keys, Criteria::IN);
+
+        return $this;
     }
 
     /**
@@ -239,24 +280,24 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
      * $query->filterById(array('min' => 12)); // WHERE id > 12
      * </code>
      *
-     * @param     mixed $id The value to use as filter.
+     * @param mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayZoneConfigurationQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterById($id = null, $comparison = null)
+    public function filterById($id = null, ?string $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -267,7 +308,9 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::ID, $id, $comparison);
+        $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_ID, $id, $comparison);
+
+        return $this;
     }
 
     /**
@@ -280,24 +323,24 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
      * $query->filterByDeliveryTime(array('min' => 12)); // WHERE delivery_time > 12
      * </code>
      *
-     * @param     mixed $deliveryTime The value to use as filter.
+     * @param mixed $deliveryTime The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayZoneConfigurationQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByDeliveryTime($deliveryTime = null, $comparison = null)
+    public function filterByDeliveryTime($deliveryTime = null, ?string $comparison = null)
     {
         if (is_array($deliveryTime)) {
             $useMinMax = false;
             if (isset($deliveryTime['min'])) {
-                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::DELIVERY_TIME, $deliveryTime['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_DELIVERY_TIME, $deliveryTime['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($deliveryTime['max'])) {
-                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::DELIVERY_TIME, $deliveryTime['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_DELIVERY_TIME, $deliveryTime['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -308,7 +351,9 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::DELIVERY_TIME, $deliveryTime, $comparison);
+        $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_DELIVERY_TIME, $deliveryTime, $comparison);
+
+        return $this;
     }
 
     /**
@@ -321,24 +366,24 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
      * $query->filterByDeliveryType(array('min' => 12)); // WHERE delivery_type > 12
      * </code>
      *
-     * @param     mixed $deliveryType The value to use as filter.
+     * @param mixed $deliveryType The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayZoneConfigurationQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByDeliveryType($deliveryType = null, $comparison = null)
+    public function filterByDeliveryType($deliveryType = null, ?string $comparison = null)
     {
         if (is_array($deliveryType)) {
             $useMinMax = false;
             if (isset($deliveryType['min'])) {
-                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::DELIVERY_TYPE, $deliveryType['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_DELIVERY_TYPE, $deliveryType['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($deliveryType['max'])) {
-                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::DELIVERY_TYPE, $deliveryType['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_DELIVERY_TYPE, $deliveryType['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -349,7 +394,9 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::DELIVERY_TYPE, $deliveryType, $comparison);
+        $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_DELIVERY_TYPE, $deliveryType, $comparison);
+
+        return $this;
     }
 
     /**
@@ -364,24 +411,24 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
      *
      * @see       filterByArea()
      *
-     * @param     mixed $areaId The value to use as filter.
+     * @param mixed $areaId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayZoneConfigurationQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByAreaId($areaId = null, $comparison = null)
+    public function filterByAreaId($areaId = null, ?string $comparison = null)
     {
         if (is_array($areaId)) {
             $useMinMax = false;
             if (isset($areaId['min'])) {
-                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::AREA_ID, $areaId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_AREA_ID, $areaId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($areaId['max'])) {
-                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::AREA_ID, $areaId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_AREA_ID, $areaId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -392,29 +439,35 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::AREA_ID, $areaId, $comparison);
+        $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_AREA_ID, $areaId, $comparison);
+
+        return $this;
     }
 
     /**
      * Filter the query by a related \Thelia\Model\Area object
      *
      * @param \Thelia\Model\Area|ObjectCollection $area The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildMondialRelayZoneConfigurationQuery The current query, for fluid interface
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return $this The current query, for fluid interface
      */
-    public function filterByArea($area, $comparison = null)
+    public function filterByArea($area, ?string $comparison = null)
     {
         if ($area instanceof \Thelia\Model\Area) {
             return $this
-                ->addUsingAlias(MondialRelayZoneConfigurationTableMap::AREA_ID, $area->getId(), $comparison);
+                ->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_AREA_ID, $area->getId(), $comparison);
         } elseif ($area instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
-            return $this
-                ->addUsingAlias(MondialRelayZoneConfigurationTableMap::AREA_ID, $area->toKeyValue('PrimaryKey', 'Id'), $comparison);
+            $this
+                ->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_AREA_ID, $area->toKeyValue('PrimaryKey', 'Id'), $comparison);
+
+            return $this;
         } else {
             throw new PropelException('filterByArea() only accepts arguments of type \Thelia\Model\Area or Collection');
         }
@@ -423,12 +476,12 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the Area relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return ChildMondialRelayZoneConfigurationQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function joinArea($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinArea(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Area');
@@ -457,13 +510,13 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
+     * @param string $relationAlias optional alias for the relation,
      *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Thelia\Model\AreaQuery A secondary query class using the current class as primary query
+     * @return \Thelia\Model\AreaQuery A secondary query class using the current class as primary query
      */
-    public function useAreaQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useAreaQuery(?string $relationAlias = null, string $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinArea($relationAlias, $joinType)
@@ -471,16 +524,112 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
     }
 
     /**
+     * Use the Area relation Area object
+     *
+     * @param callable(\Thelia\Model\AreaQuery):\Thelia\Model\AreaQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withAreaQuery(
+        callable $callable,
+        ?string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useAreaQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+
+    /**
+     * Use the relation to Area table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \Thelia\Model\AreaQuery The inner query object of the EXISTS statement
+     */
+    public function useAreaExistsQuery(?string $modelAlias = null, ?string $queryClass = null, string $typeOfExists = 'EXISTS')
+    {
+        /** @var $q \Thelia\Model\AreaQuery */
+        $q = $this->useExistsQuery('Area', $modelAlias, $queryClass, $typeOfExists);
+        return $q;
+    }
+
+    /**
+     * Use the relation to Area table for a NOT EXISTS query.
+     *
+     * @see useAreaExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \Thelia\Model\AreaQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useAreaNotExistsQuery(?string $modelAlias = null, ?string $queryClass = null)
+    {
+        /** @var $q \Thelia\Model\AreaQuery */
+        $q = $this->useExistsQuery('Area', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $q;
+    }
+
+    /**
+     * Use the relation to Area table for an IN query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
+     * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
+     *
+     * @return \Thelia\Model\AreaQuery The inner query object of the IN statement
+     */
+    public function useInAreaQuery(?string $modelAlias = null, ?string $queryClass = null, string $typeOfIn = 'IN')
+    {
+        /** @var $q \Thelia\Model\AreaQuery */
+        $q = $this->useInQuery('Area', $modelAlias, $queryClass, $typeOfIn);
+        return $q;
+    }
+
+    /**
+     * Use the relation to Area table for a NOT IN query.
+     *
+     * @see useAreaInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
+     *
+     * @return \Thelia\Model\AreaQuery The inner query object of the NOT IN statement
+     */
+    public function useNotInAreaQuery(?string $modelAlias = null, ?string $queryClass = null)
+    {
+        /** @var $q \Thelia\Model\AreaQuery */
+        $q = $this->useInQuery('Area', $modelAlias, $queryClass, 'NOT IN');
+        return $q;
+    }
+
+    /**
      * Exclude object from result
      *
-     * @param   ChildMondialRelayZoneConfiguration $mondialRelayZoneConfiguration Object to remove from the list of results
+     * @param ChildMondialRelayZoneConfiguration $mondialRelayZoneConfiguration Object to remove from the list of results
      *
-     * @return ChildMondialRelayZoneConfigurationQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function prune($mondialRelayZoneConfiguration = null)
     {
         if ($mondialRelayZoneConfiguration) {
-            $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::ID, $mondialRelayZoneConfiguration->getId(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(MondialRelayZoneConfigurationTableMap::COL_ID, $mondialRelayZoneConfiguration->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
@@ -492,16 +641,16 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public function doDeleteAll(ConnectionInterface $con = null)
+    public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayZoneConfigurationTableMap::DATABASE_NAME);
         }
-        $affectedRows = 0; // initialize var to track total num of affected rows
-        try {
-            // use transaction because $criteria could contain info
-            // for more than one table or we could emulating ON DELETE CASCADE, etc.
-            $con->beginTransaction();
+
+        // use transaction because $criteria could contain info
+        // for more than one table or we could emulating ON DELETE CASCADE, etc.
+        return $con->transaction(function () use ($con) {
+            $affectedRows = 0; // initialize var to track total num of affected rows
             $affectedRows += parent::doDeleteAll($con);
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
@@ -509,28 +658,21 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
             MondialRelayZoneConfigurationTableMap::clearInstancePool();
             MondialRelayZoneConfigurationTableMap::clearRelatedInstancePool();
 
-            $con->commit();
-        } catch (PropelException $e) {
-            $con->rollBack();
-            throw $e;
-        }
-
-        return $affectedRows;
+            return $affectedRows;
+        });
     }
 
     /**
-     * Performs a DELETE on the database, given a ChildMondialRelayZoneConfiguration or Criteria object OR a primary key value.
+     * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param mixed               $values Criteria or ChildMondialRelayZoneConfiguration object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         if supported by native driver or if emulated using Propel.
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
-     public function delete(ConnectionInterface $con = null)
-     {
+    public function delete(?ConnectionInterface $con = null): int
+    {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayZoneConfigurationTableMap::DATABASE_NAME);
         }
@@ -540,25 +682,18 @@ abstract class MondialRelayZoneConfigurationQuery extends ModelCriteria
         // Set the correct dbName
         $criteria->setDbName(MondialRelayZoneConfigurationTableMap::DATABASE_NAME);
 
-        $affectedRows = 0; // initialize var to track total num of affected rows
+        // use transaction because $criteria could contain info
+        // for more than one table or we could emulating ON DELETE CASCADE, etc.
+        return $con->transaction(function () use ($con, $criteria) {
+            $affectedRows = 0; // initialize var to track total num of affected rows
 
-        try {
-            // use transaction because $criteria could contain info
-            // for more than one table or we could emulating ON DELETE CASCADE, etc.
-            $con->beginTransaction();
-
-
-        MondialRelayZoneConfigurationTableMap::removeInstanceFromPool($criteria);
+            MondialRelayZoneConfigurationTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
             MondialRelayZoneConfigurationTableMap::clearRelatedInstancePool();
-            $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
-            $con->rollBack();
-            throw $e;
-        }
+        });
     }
 
-} // MondialRelayZoneConfigurationQuery
+}

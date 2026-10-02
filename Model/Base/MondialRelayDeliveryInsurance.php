@@ -5,6 +5,7 @@ namespace MondialRelay\Model\Base;
 use \Exception;
 use \PDO;
 use MondialRelay\Model\MondialRelayDeliveryInsuranceQuery as ChildMondialRelayDeliveryInsuranceQuery;
+use MondialRelay\Model\Event\MondialRelayDeliveryInsuranceEvent;
 use MondialRelay\Model\Map\MondialRelayDeliveryInsuranceTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -13,27 +14,37 @@ use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
+use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 
+/**
+ * Base class that represents a row from the 'mondial_relay_delivery_insurance' table.
+ *
+ *
+ *
+ * @package    propel.generator.MondialRelay.Model.Base
+ */
 abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
 {
     /**
      * TableMap class name
+     *
+     * @var string
      */
-    const TABLE_MAP = '\\MondialRelay\\Model\\Map\\MondialRelayDeliveryInsuranceTableMap';
+    public const TABLE_MAP = '\\MondialRelay\\Model\\Map\\MondialRelayDeliveryInsuranceTableMap';
 
 
     /**
      * attribute to determine if this object has previously been saved.
-     * @var boolean
+     * @var bool
      */
     protected $new = true;
 
     /**
      * attribute to determine whether this object has been deleted.
-     * @var boolean
+     * @var bool
      */
     protected $deleted = false;
 
@@ -42,46 +53,50 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * Tracking modified columns allows us to only update modified columns.
      * @var array
      */
-    protected $modifiedColumns = array();
+    protected $modifiedColumns = [];
 
     /**
      * The (virtual) columns that are added at runtime
      * The formatters can add supplementary columns based on a resultset
      * @var array
      */
-    protected $virtualColumns = array();
+    protected $virtualColumns = [];
 
     /**
      * The value for the id field.
+     *
      * @var        int
      */
-    protected $id;
+    protected ?int $id = null;
 
     /**
      * The value for the level field.
+     *
      * @var        int
      */
-    protected $level;
+    protected ?int $level = null;
 
     /**
      * The value for the max_value field.
+     *
      * Note: this column has a database default value of: '0.000000'
      * @var        string
      */
-    protected $max_value;
+    protected ?string $max_value = null;
 
     /**
      * The value for the price_with_tax field.
+     *
      * Note: this column has a database default value of: '0.000000'
      * @var        string
      */
-    protected $price_with_tax;
+    protected ?string $price_with_tax = null;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
-     * @var boolean
+     * @var bool
      */
     protected $alreadyInSave = false;
 
@@ -91,7 +106,7 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * equivalent initialization method).
      * @see __construct()
      */
-    public function applyDefaultValues()
+    public function applyDefaultValues(): void
     {
         $this->max_value = '0.000000';
         $this->price_with_tax = '0.000000';
@@ -109,9 +124,9 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Returns whether the object has been modified.
      *
-     * @return boolean True if the object has been modified.
+     * @return bool True if the object has been modified.
      */
-    public function isModified()
+    public function isModified(): bool
     {
         return !!$this->modifiedColumns;
     }
@@ -119,10 +134,10 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Has specified column been modified?
      *
-     * @param  string  $col column fully qualified name (TableMap::TYPE_COLNAME), e.g. Book::AUTHOR_ID
-     * @return boolean True if $col has been modified.
+     * @param string $col column fully qualified name (TableMap::TYPE_COLNAME), e.g. Book::AUTHOR_ID
+     * @return bool True if $col has been modified.
      */
-    public function isColumnModified($col)
+    public function isColumnModified(string $col): bool
     {
         return $this->modifiedColumns && isset($this->modifiedColumns[$col]);
     }
@@ -131,7 +146,7 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * Get the columns that have been modified in this object.
      * @return array A unique list of the modified column names for this object.
      */
-    public function getModifiedColumns()
+    public function getModifiedColumns(): array
     {
         return $this->modifiedColumns ? array_keys($this->modifiedColumns) : [];
     }
@@ -141,9 +156,9 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * be false, if the object was retrieved from storage or was created
      * and then saved.
      *
-     * @return boolean true, if the object has never been persisted.
+     * @return bool True, if the object has never been persisted.
      */
-    public function isNew()
+    public function isNew(): bool
     {
         return $this->new;
     }
@@ -152,45 +167,43 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * Setter for the isNew attribute.  This method will be called
      * by Propel-generated children and objects.
      *
-     * @param boolean $b the state of the object.
+     * @param bool $b the state of the object.
      */
-    public function setNew($b)
+    public function setNew(bool $b): void
     {
-        $this->new = (Boolean) $b;
+        $this->new = $b;
     }
 
     /**
      * Whether this object has been deleted.
-     * @return boolean The deleted state of this object.
+     * @return bool The deleted state of this object.
      */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         return $this->deleted;
     }
 
     /**
      * Specify whether this object has been deleted.
-     * @param  boolean $b The deleted state of this object.
+     * @param bool $b The deleted state of this object.
      * @return void
      */
-    public function setDeleted($b)
+    public function setDeleted(bool $b): void
     {
-        $this->deleted = (Boolean) $b;
+        $this->deleted = $b;
     }
 
     /**
      * Sets the modified state for the object to be false.
-     * @param  string $col If supplied, only the specified column is reset.
+     * @param string $col If supplied, only the specified column is reset.
      * @return void
      */
-    public function resetModified($col = null)
+    public function resetModified(?string $col = null): void
     {
         if (null !== $col) {
-            if (isset($this->modifiedColumns[$col])) {
-                unset($this->modifiedColumns[$col]);
-            }
+            unset($this->modifiedColumns[$col]);
         } else {
-            $this->modifiedColumns = array();
+            $this->modifiedColumns = [];
         }
     }
 
@@ -199,13 +212,12 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * <code>obj</code> is an instance of <code>MondialRelayDeliveryInsurance</code>, delegates to
      * <code>equals(MondialRelayDeliveryInsurance)</code>.  Otherwise, returns <code>false</code>.
      *
-     * @param  mixed   $obj The object to compare to.
-     * @return boolean Whether equal to the object specified.
+     * @param mixed $obj The object to compare to.
+     * @return bool Whether equal to the object specified.
      */
-    public function equals($obj)
+    public function equals($obj): bool
     {
-        $thisclazz = get_class($this);
-        if (!is_object($obj) || !($obj instanceof $thisclazz)) {
+        if (!$obj instanceof static) {
             return false;
         }
 
@@ -213,8 +225,7 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
             return true;
         }
 
-        if (null === $this->getPrimaryKey()
-            || null === $obj->getPrimaryKey())  {
+        if (null === $this->getPrimaryKey() || null === $obj->getPrimaryKey()) {
             return false;
         }
 
@@ -222,26 +233,11 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     }
 
     /**
-     * If the primary key is not null, return the hashcode of the
-     * primary key. Otherwise, return the hash code of the object.
-     *
-     * @return int Hashcode
-     */
-    public function hashCode()
-    {
-        if (null !== $this->getPrimaryKey()) {
-            return crc32(serialize($this->getPrimaryKey()));
-        }
-
-        return crc32(serialize(clone $this));
-    }
-
-    /**
      * Get the associative array of the virtual columns in this object
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function getVirtualColumns()
+    public function getVirtualColumns(): array
     {
         return $this->virtualColumns;
     }
@@ -249,10 +245,10 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Checks the existence of a virtual column in this object
      *
-     * @param  string  $name The virtual column name
-     * @return boolean
+     * @param string $name The virtual column name
+     * @return bool
      */
-    public function hasVirtualColumn($name)
+    public function hasVirtualColumn(string $name): bool
     {
         return array_key_exists($name, $this->virtualColumns);
     }
@@ -260,15 +256,14 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Get the value of a virtual column in this object
      *
-     * @param  string $name The virtual column name
-     * @return mixed
+     * @param string $name The virtual column name
      *
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getVirtualColumn($name)
+    public function getVirtualColumn(string $name): mixed
     {
         if (!$this->hasVirtualColumn($name)) {
-            throw new PropelException(sprintf('Cannot get value of inexistent virtual column %s.', $name));
+            throw new PropelException(sprintf('Cannot get value of nonexistent virtual column `%s`.', $name));
         }
 
         return $this->virtualColumns[$name];
@@ -277,12 +272,12 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Set the value of a virtual column in this object
      *
-     * @param string $name  The virtual column name
-     * @param mixed  $value The value to give to the virtual column
+     * @param string $name The virtual column name
+     * @param mixed $value The value to give to the virtual column
      *
-     * @return MondialRelayDeliveryInsurance The current object, for fluid interface
+     * @return $this The current object, for fluid interface
      */
-    public function setVirtualColumn($name, $value)
+    public function setVirtualColumn(string $name, mixed $value): static
     {
         $this->virtualColumns[$name] = $value;
 
@@ -292,37 +287,13 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Logs a message using Propel::log().
      *
-     * @param  string  $msg
-     * @param  int     $priority One of the Propel::LOG_* logging levels
-     * @return boolean
+     * @param string $msg
+     * @param int $priority One of the Propel::LOG_* logging levels
+     * @return void
      */
-    protected function log($msg, $priority = Propel::LOG_INFO)
+    protected function log(string $msg, int $priority = Propel::LOG_INFO): void
     {
-        return Propel::log(get_class($this) . ': ' . $msg, $priority);
-    }
-
-    /**
-     * Populate the current object from a string, using a given parser format
-     * <code>
-     * $book = new Book();
-     * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
-     * </code>
-     *
-     * @param mixed $parser A AbstractParser instance,
-     *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
-     * @param string $data The source data to import from
-     *
-     * @return MondialRelayDeliveryInsurance The current object, for fluid interface
-     */
-    public function importFrom($parser, $data)
-    {
-        if (!$parser instanceof AbstractParser) {
-            $parser = AbstractParser::getParser($parser);
-        }
-
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
-
-        return $this;
+        Propel::log(\get_class($this) . ': ' . $msg, $priority);
     }
 
     /**
@@ -333,81 +304,88 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      *  => {"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
-     * @param  mixed   $parser                 A AbstractParser instance, or a format name ('XML', 'YAML', 'JSON', 'CSV')
-     * @param  boolean $includeLazyLoadColumns (optional) Whether to include lazy load(ed) columns. Defaults to TRUE.
-     * @return string  The exported data
+     * @param \Propel\Runtime\Parser\AbstractParser|string $parser An AbstractParser instance, or a format name ('XML', 'YAML', 'JSON', 'CSV')
+     * @param bool $includeLazyLoadColumns (optional) Whether to include lazy load(ed) columns. Defaults to TRUE.
+     * @param string $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME, TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM. Defaults to TableMap::TYPE_PHPNAME.
+     * @return string The exported data
      */
-    public function exportTo($parser, $includeLazyLoadColumns = true)
+    public function exportTo($parser, bool $includeLazyLoadColumns = true, string $keyType = TableMap::TYPE_PHPNAME): string
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        return $parser->fromArray($this->toArray(TableMap::TYPE_PHPNAME, $includeLazyLoadColumns, array(), true));
+        return $parser->fromArray($this->toArray($keyType, $includeLazyLoadColumns, array(), true));
     }
 
     /**
      * Clean up internal collections prior to serializing
      * Avoids recursive loops that turn into segmentation faults when serializing
+     *
+     * @return array<string>
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         $this->clearAllReferences();
 
-        return array_keys(get_object_vars($this));
+        $cls = new \ReflectionClass($this);
+        $propertyNames = [];
+        $serializableProperties = array_diff($cls->getProperties(), $cls->getProperties(\ReflectionProperty::IS_STATIC));
+
+        foreach($serializableProperties as $property) {
+            $propertyNames[] = $property->getName();
+        }
+
+        return $propertyNames;
     }
 
     /**
      * Get the [id] column value.
      *
-     * @return   int
+     * @return int
      */
-    public function getId()
+    public function getId(): ?int
     {
-
         return $this->id;
     }
 
     /**
      * Get the [level] column value.
      *
-     * @return   int
+     * @return int
      */
-    public function getLevel()
+    public function getLevel(): ?int
     {
-
         return $this->level;
     }
 
     /**
      * Get the [max_value] column value.
      *
-     * @return   string
+     * @return string
      */
-    public function getMaxValue()
+    public function getMaxValue(): ?string
     {
-
         return $this->max_value;
     }
 
     /**
      * Get the [price_with_tax] column value.
      *
-     * @return   string
+     * @return string
      */
-    public function getPriceWithTax()
+    public function getPriceWithTax(): ?string
     {
-
         return $this->price_with_tax;
     }
 
     /**
      * Set the value of [id] column.
      *
-     * @param      int $v new value
-     * @return   \MondialRelay\Model\MondialRelayDeliveryInsurance The current object (for fluent API support)
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
      */
-    public function setId($v)
+    public function setId(?int $v = null): static
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -415,20 +393,19 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::ID] = true;
+            $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::COL_ID] = true;
         }
 
-
         return $this;
-    } // setId()
+    }
 
     /**
      * Set the value of [level] column.
      *
-     * @param      int $v new value
-     * @return   \MondialRelay\Model\MondialRelayDeliveryInsurance The current object (for fluent API support)
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
      */
-    public function setLevel($v)
+    public function setLevel(?int $v = null): static
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -436,20 +413,19 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
 
         if ($this->level !== $v) {
             $this->level = $v;
-            $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::LEVEL] = true;
+            $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::COL_LEVEL] = true;
         }
 
-
         return $this;
-    } // setLevel()
+    }
 
     /**
      * Set the value of [max_value] column.
      *
-     * @param      string $v new value
-     * @return   \MondialRelay\Model\MondialRelayDeliveryInsurance The current object (for fluent API support)
+     * @param string $v New value
+     * @return $this The current object (for fluent API support)
      */
-    public function setMaxValue($v)
+    public function setMaxValue(?string $v = null): static
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -457,20 +433,19 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
 
         if ($this->max_value !== $v) {
             $this->max_value = $v;
-            $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::MAX_VALUE] = true;
+            $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::COL_MAX_VALUE] = true;
         }
 
-
         return $this;
-    } // setMaxValue()
+    }
 
     /**
      * Set the value of [price_with_tax] column.
      *
-     * @param      string $v new value
-     * @return   \MondialRelay\Model\MondialRelayDeliveryInsurance The current object (for fluent API support)
+     * @param string $v New value
+     * @return $this The current object (for fluent API support)
      */
-    public function setPriceWithTax($v)
+    public function setPriceWithTax(?string $v = null): static
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -478,12 +453,11 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
 
         if ($this->price_with_tax !== $v) {
             $this->price_with_tax = $v;
-            $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::PRICE_WITH_TAX] = true;
+            $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::COL_PRICE_WITH_TAX] = true;
         }
 
-
         return $this;
-    } // setPriceWithTax()
+    }
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -491,9 +465,9 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * This method can be used in conjunction with isModified() to indicate whether an object is both
      * modified _and_ has some values set which are non-default.
      *
-     * @return boolean Whether the columns in this object are only been set with default values.
+     * @return bool Whether the columns in this object are only been set with default values.
      */
-    public function hasOnlyDefaultValues()
+    public function hasOnlyDefaultValues(): bool
     {
             if ($this->max_value !== '0.000000') {
                 return false;
@@ -505,7 +479,7 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
 
         // otherwise, everything was equal, so return TRUE
         return true;
-    } // hasOnlyDefaultValues()
+    }
 
     /**
      * Hydrates (populates) the object variables with values from the database resultset.
@@ -515,20 +489,19 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * for results of JOIN queries where the resultset row includes columns from two or
      * more tables.
      *
-     * @param array   $row       The row returned by DataFetcher->fetch().
-     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
-     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
-     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param array $row The row returned by DataFetcher->fetch().
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
+     * @param bool $rehydrate Whether this object is being re-hydrated from the database.
+     * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
+                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
-     * @return int             next starting column
-     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
+     * @return int next starting column
+     * @throws \Propel\Runtime\Exception\PropelException - Any caught Exception will be rewrapped as a PropelException.
      */
-    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
+    public function hydrate(array $row, int $startcol = 0, bool $rehydrate = false, string $indexType = TableMap::TYPE_NUM): int
     {
         try {
-
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : MondialRelayDeliveryInsuranceTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
@@ -541,8 +514,8 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : MondialRelayDeliveryInsuranceTableMap::translateFieldName('PriceWithTax', TableMap::TYPE_PHPNAME, $indexType)];
             $this->price_with_tax = (null !== $col) ? (string) $col : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -552,7 +525,7 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
             return $startcol + 4; // 4 = MondialRelayDeliveryInsuranceTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException("Error populating \MondialRelay\Model\MondialRelayDeliveryInsurance object", 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\MondialRelay\\Model\\MondialRelayDeliveryInsurance'), 0, $e);
         }
     }
 
@@ -567,23 +540,24 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * the base method from the overridden method (i.e. parent::ensureConsistency()),
      * in case your model changes.
      *
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
+     * @return void
      */
-    public function ensureConsistency()
+    public function ensureConsistency(): void
     {
-    } // ensureConsistency
+    }
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
      *
      * This will only work if the object has been saved and has a valid primary key set.
      *
-     * @param      boolean $deep (optional) Whether to also de-associated any related objects.
-     * @param      ConnectionInterface $con (optional) The ConnectionInterface connection to use.
+     * @param bool $deep (optional) Whether to also de-associated any related objects.
+     * @param ConnectionInterface $con (optional) The ConnectionInterface connection to use.
      * @return void
-     * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
+     * @throws \Propel\Runtime\Exception\PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, ConnectionInterface $con = null)
+    public function reload(bool $deep = false, ?ConnectionInterface $con = null): void
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -616,13 +590,13 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Removes this object from datastore and sets delete attribute.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      * @return void
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      * @see MondialRelayDeliveryInsurance::setDeleted()
      * @see MondialRelayDeliveryInsurance::isDeleted()
      */
-    public function delete(ConnectionInterface $con = null)
+    public function delete(?ConnectionInterface $con = null): void
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -632,23 +606,16 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayDeliveryInsuranceTableMap::DATABASE_NAME);
         }
 
-        $con->beginTransaction();
-        try {
+        $con->transaction(function () use ($con) {
             $deleteQuery = ChildMondialRelayDeliveryInsuranceQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
-                $con->commit();
                 $this->setDeleted(true);
-            } else {
-                $con->commit();
             }
-        } catch (Exception $e) {
-            $con->rollBack();
-            throw $e;
-        }
+        });
     }
 
     /**
@@ -659,25 +626,28 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * method.  This method wraps all precipitate database operations in a
      * single transaction.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
-     * @throws PropelException
+     * @param ConnectionInterface $con
+     * @return int The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @throws \Propel\Runtime\Exception\PropelException
      * @see doSave()
      */
-    public function save(ConnectionInterface $con = null)
+    public function save(?ConnectionInterface $con = null): int
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
+        }
+
+        if ($this->alreadyInSave) {
+            return 0;
         }
 
         if ($con === null) {
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayDeliveryInsuranceTableMap::DATABASE_NAME);
         }
 
-        $con->beginTransaction();
-        $isInsert = $this->isNew();
-        try {
+        return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
+            $isInsert = $this->isNew();
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -695,13 +665,9 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
             } else {
                 $affectedRows = 0;
             }
-            $con->commit();
 
             return $affectedRows;
-        } catch (Exception $e) {
-            $con->rollBack();
-            throw $e;
-        }
+        });
     }
 
     /**
@@ -710,12 +676,12 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * If the object is new, it inserts it; otherwise an update is performed.
      * All related objects are also updated in this method.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
-     * @throws PropelException
+     * @param ConnectionInterface $con
+     * @return int The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @throws \Propel\Runtime\Exception\PropelException
      * @see save()
      */
-    protected function doSave(ConnectionInterface $con)
+    protected function doSave(ConnectionInterface $con): int
     {
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
@@ -725,10 +691,10 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 
@@ -737,42 +703,42 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
         }
 
         return $affectedRows;
-    } // doSave()
+    }
 
     /**
      * Insert the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      * @see doSave()
      */
-    protected function doInsert(ConnectionInterface $con)
+    protected function doInsert(ConnectionInterface $con): void
     {
-        $modifiedColumns = array();
+        $modifiedColumns = [];
         $index = 0;
 
-        $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::ID] = true;
+        $this->modifiedColumns[MondialRelayDeliveryInsuranceTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . MondialRelayDeliveryInsuranceTableMap::ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . MondialRelayDeliveryInsuranceTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::ID)) {
-            $modifiedColumns[':p' . $index++]  = 'ID';
+        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::LEVEL)) {
-            $modifiedColumns[':p' . $index++]  = 'LEVEL';
+        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::COL_LEVEL)) {
+            $modifiedColumns[':p' . $index++]  = '`level`';
         }
-        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::MAX_VALUE)) {
-            $modifiedColumns[':p' . $index++]  = 'MAX_VALUE';
+        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::COL_MAX_VALUE)) {
+            $modifiedColumns[':p' . $index++]  = '`max_value`';
         }
-        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::PRICE_WITH_TAX)) {
-            $modifiedColumns[':p' . $index++]  = 'PRICE_WITH_TAX';
+        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::COL_PRICE_WITH_TAX)) {
+            $modifiedColumns[':p' . $index++]  = '`price_with_tax`';
         }
 
         $sql = sprintf(
-            'INSERT INTO mondial_relay_delivery_insurance (%s) VALUES (%s)',
+            'INSERT INTO `mondial_relay_delivery_insurance` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -781,17 +747,21 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+
                         break;
-                    case 'LEVEL':
+                    case '`level`':
                         $stmt->bindValue($identifier, $this->level, PDO::PARAM_INT);
+
                         break;
-                    case 'MAX_VALUE':
+                    case '`max_value`':
                         $stmt->bindValue($identifier, $this->max_value, PDO::PARAM_STR);
+
                         break;
-                    case 'PRICE_WITH_TAX':
+                    case '`price_with_tax`':
                         $stmt->bindValue($identifier, $this->price_with_tax, PDO::PARAM_STR);
+
                         break;
                 }
             }
@@ -814,12 +784,12 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Update the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
-     * @return Integer Number of updated rows
+     * @return int Number of updated rows
      * @see doSave()
      */
-    protected function doUpdate(ConnectionInterface $con)
+    protected function doUpdate(ConnectionInterface $con): int
     {
         $selectCriteria = $this->buildPkeyCriteria();
         $valuesCriteria = $this->buildCriteria();
@@ -830,14 +800,14 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Retrieves a field from the object by name passed in as a string.
      *
-     * @param      string $name name
-     * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $name name
+     * @param string $type The type of fieldname the $name is of:
+     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                     Defaults to TableMap::TYPE_PHPNAME.
      * @return mixed Value of field.
      */
-    public function getByName($name, $type = TableMap::TYPE_PHPNAME)
+    public function getByName(string $name, string $type = TableMap::TYPE_PHPNAME)
     {
         $pos = MondialRelayDeliveryInsuranceTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
@@ -849,27 +819,26 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * Retrieves a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param      int $pos position in xml schema
+     * @param int $pos Position in XML schema
      * @return mixed Value of field at $pos
      */
-    public function getByPosition($pos)
+    public function getByPosition(int $pos)
     {
         switch ($pos) {
             case 0:
                 return $this->getId();
-                break;
+
             case 1:
                 return $this->getLevel();
-                break;
+
             case 2:
                 return $this->getMaxValue();
-                break;
+
             case 3:
                 return $this->getPriceWithTax();
-                break;
+
             default:
                 return null;
-                break;
         } // switch()
     }
 
@@ -879,27 +848,27 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * @param string $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                    Defaults to TableMap::TYPE_PHPNAME.
-     * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
-     * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param bool $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+     * @param array $alreadyDumpedObjects List of objects to skip to avoid recursion
      *
-     * @return array an associative array containing the field names (as keys) and field values
+     * @return array An associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = []): array
     {
-        if (isset($alreadyDumpedObjects['MondialRelayDeliveryInsurance'][$this->getPrimaryKey()])) {
-            return '*RECURSION*';
+        if (isset($alreadyDumpedObjects['MondialRelayDeliveryInsurance'][$this->hashCode()])) {
+            return ['*RECURSION*'];
         }
-        $alreadyDumpedObjects['MondialRelayDeliveryInsurance'][$this->getPrimaryKey()] = true;
+        $alreadyDumpedObjects['MondialRelayDeliveryInsurance'][$this->hashCode()] = true;
         $keys = MondialRelayDeliveryInsuranceTableMap::getFieldNames($keyType);
-        $result = array(
+        $result = [
             $keys[0] => $this->getId(),
             $keys[1] => $this->getLevel(),
             $keys[2] => $this->getMaxValue(),
             $keys[3] => $this->getPriceWithTax(),
-        );
+        ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -912,30 +881,32 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Sets a field from the object by name passed in as a string.
      *
-     * @param      string $name
-     * @param      mixed  $value field value
-     * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                     Defaults to TableMap::TYPE_PHPNAME.
-     * @return void
+     * @param string $name
+     * @param mixed $value field value
+     * @param string $type The type of fieldname the $name is of:
+     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+     *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                Defaults to TableMap::TYPE_PHPNAME.
+     * @return $this
      */
-    public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
+    public function setByName(string $name, $value, string $type = TableMap::TYPE_PHPNAME)
     {
         $pos = MondialRelayDeliveryInsuranceTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
-        return $this->setByPosition($pos, $value);
+        $this->setByPosition($pos, $value);
+
+        return $this;
     }
 
     /**
      * Sets a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param      int $pos position in xml schema
-     * @param      mixed $value field value
-     * @return void
+     * @param int $pos position in xml schema
+     * @param mixed $value field value
+     * @return $this
      */
-    public function setByPosition($pos, $value)
+    public function setByPosition(int $pos, $value)
     {
         switch ($pos) {
             case 0:
@@ -951,6 +922,8 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
                 $this->setPriceWithTax($value);
                 break;
         } // switch()
+
+        return $this;
     }
 
     /**
@@ -962,37 +935,85 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * array. If so the setByName() method is called for that column.
      *
      * You can specify the key type of the array by additionally passing one
-     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
-     * @param      array  $arr     An array to populate the object from.
-     * @param      string $keyType The type of keys the array uses.
-     * @return void
+     * @param array $arr An array to populate the object from.
+     * @param string $keyType The type of keys the array uses.
+     * @return $this
      */
-    public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
+    public function fromArray(array $arr, string $keyType = TableMap::TYPE_PHPNAME)
     {
         $keys = MondialRelayDeliveryInsuranceTableMap::getFieldNames($keyType);
 
-        if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setLevel($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setMaxValue($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setPriceWithTax($arr[$keys[3]]);
+        if (array_key_exists($keys[0], $arr)) {
+            $this->setId($arr[$keys[0]]);
+        }
+        if (array_key_exists($keys[1], $arr)) {
+            $this->setLevel($arr[$keys[1]]);
+        }
+        if (array_key_exists($keys[2], $arr)) {
+            $this->setMaxValue($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setPriceWithTax($arr[$keys[3]]);
+        }
+
+        return $this;
+    }
+
+     /**
+     * Populate the current object from a string, using a given parser format
+     * <code>
+     * $book = new Book();
+     * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
+     * </code>
+     *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
+     * @param mixed $parser A AbstractParser instance,
+     *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
+     * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
+     *
+     * @return $this The current object, for fluid interface
+     */
+    public function importFrom($parser, string $data, string $keyType = TableMap::TYPE_PHPNAME)
+    {
+        if (!$parser instanceof AbstractParser) {
+            $parser = AbstractParser::getParser($parser);
+        }
+
+        $this->fromArray($parser->toArray($data), $keyType);
+
+        return $this;
     }
 
     /**
      * Build a Criteria object containing the values of all modified columns in this object.
      *
-     * @return Criteria The Criteria object containing all modified values.
+     * @return \Propel\Runtime\ActiveQuery\Criteria The Criteria object containing all modified values.
      */
-    public function buildCriteria()
+    public function buildCriteria(): Criteria
     {
         $criteria = new Criteria(MondialRelayDeliveryInsuranceTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::ID)) $criteria->add(MondialRelayDeliveryInsuranceTableMap::ID, $this->id);
-        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::LEVEL)) $criteria->add(MondialRelayDeliveryInsuranceTableMap::LEVEL, $this->level);
-        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::MAX_VALUE)) $criteria->add(MondialRelayDeliveryInsuranceTableMap::MAX_VALUE, $this->max_value);
-        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::PRICE_WITH_TAX)) $criteria->add(MondialRelayDeliveryInsuranceTableMap::PRICE_WITH_TAX, $this->price_with_tax);
+        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::COL_ID)) {
+            $criteria->add(MondialRelayDeliveryInsuranceTableMap::COL_ID, $this->id);
+        }
+        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::COL_LEVEL)) {
+            $criteria->add(MondialRelayDeliveryInsuranceTableMap::COL_LEVEL, $this->level);
+        }
+        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::COL_MAX_VALUE)) {
+            $criteria->add(MondialRelayDeliveryInsuranceTableMap::COL_MAX_VALUE, $this->max_value);
+        }
+        if ($this->isColumnModified(MondialRelayDeliveryInsuranceTableMap::COL_PRICE_WITH_TAX)) {
+            $criteria->add(MondialRelayDeliveryInsuranceTableMap::COL_PRICE_WITH_TAX, $this->price_with_tax);
+        }
 
         return $criteria;
     }
@@ -1001,21 +1022,45 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * Builds a Criteria object containing the primary key for this object.
      *
      * Unlike buildCriteria() this method includes the primary key values regardless
-     * of whether or not they have been modified.
+     * of whether they have been modified.
      *
-     * @return Criteria The Criteria object containing value(s) for primary key(s).
+     * @throws LogicException if no primary key is defined
+     *
+     * @return \Propel\Runtime\ActiveQuery\Criteria The Criteria object containing value(s) for primary key(s).
      */
-    public function buildPkeyCriteria()
+    public function buildPkeyCriteria(): Criteria
     {
-        $criteria = new Criteria(MondialRelayDeliveryInsuranceTableMap::DATABASE_NAME);
-        $criteria->add(MondialRelayDeliveryInsuranceTableMap::ID, $this->id);
+        $criteria = ChildMondialRelayDeliveryInsuranceQuery::create();
+        $criteria->add(MondialRelayDeliveryInsuranceTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
 
     /**
+     * If the primary key is not null, return the hashcode of the
+     * primary key. Otherwise, return the hash code of the object.
+     *
+     * @return int|string Hashcode
+     */
+    public function hashCode()
+    {
+        $validPk = null !== $this->getId();
+
+        $validPrimaryKeyFKs = 0;
+        $primaryKeyFKs = [];
+
+        if ($validPk) {
+            return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
+        } elseif ($validPrimaryKeyFKs) {
+            return crc32(json_encode($primaryKeyFKs, JSON_UNESCAPED_UNICODE));
+        }
+
+        return spl_object_hash($this);
+    }
+
+    /**
      * Returns the primary key for this object (row).
-     * @return   int
+     * @return int
      */
     public function getPrimaryKey()
     {
@@ -1025,21 +1070,21 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     /**
      * Generic method to set the primary key (id column).
      *
-     * @param       int $key Primary key.
+     * @param int|null $key Primary key.
      * @return void
      */
-    public function setPrimaryKey($key)
+    public function setPrimaryKey(?int $key = null): void
     {
         $this->setId($key);
     }
 
     /**
      * Returns true if the primary key for this object is null.
-     * @return boolean
+     *
+     * @return bool
      */
-    public function isPrimaryKeyNull()
+    public function isPrimaryKeyNull(): bool
     {
-
         return null === $this->getId();
     }
 
@@ -1049,12 +1094,13 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \MondialRelay\Model\MondialRelayDeliveryInsurance (or compatible) type.
-     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
-     * @throws PropelException
+     * @param object $copyObj An object of \MondialRelay\Model\MondialRelayDeliveryInsurance (or compatible) type.
+     * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
+     * @throws \Propel\Runtime\Exception\PropelException
+     * @return void
      */
-    public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
+    public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
         $copyObj->setLevel($this->getLevel());
         $copyObj->setMaxValue($this->getMaxValue());
@@ -1073,14 +1119,14 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return                 \MondialRelay\Model\MondialRelayDeliveryInsurance Clone of current object.
-     * @throws PropelException
+     * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @return \MondialRelay\Model\MondialRelayDeliveryInsurance Clone of current object.
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function copy($deepCopy = false)
+    public function copy(bool $deepCopy = false)
     {
-        // we use get_class(), because this might be a subclass
-        $clazz = get_class($this);
+        // we use \get_class(), because this might be a subclass
+        $clazz = \get_class($this);
         $copyObj = new $clazz();
         $this->copyInto($copyObj, $deepCopy);
 
@@ -1088,7 +1134,11 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
     }
 
     /**
-     * Clears the current object and sets all attributes to their default values
+     * Clears the current object, sets all attributes to their default values and removes
+     * outgoing references as well as back-references (from other objects to this one. Results probably in a database
+     * change of those foreign objects when you call `save` there).
+     *
+     * @return $this
      */
     public function clear()
     {
@@ -1102,22 +1152,25 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
+
+        return $this;
     }
 
     /**
-     * Resets all references to other model objects or collections of model objects.
+     * Resets all references and back-references to other model objects or collections of model objects.
      *
-     * This method is a user-space workaround for PHP's inability to garbage collect
-     * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volume/high-memory operations.
+     * This method is used to reset all php object references (not the actual reference in the database).
+     * Necessary for object serialisation.
      *
-     * @param      boolean $deep Whether to also clear the references on all referrer objects.
+     * @param bool $deep Whether to also clear the references on all referrer objects.
+     * @return $this
      */
-    public function clearAllReferences($deep = false)
+    public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
         } // if ($deep)
 
+        return $this;
     }
 
     /**
@@ -1132,78 +1185,185 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
 
     /**
      * Code to be run before persisting the object
-     * @param  ConnectionInterface $con
-     * @return boolean
+     * @param ConnectionInterface|null $con
+     * @return bool
      */
-    public function preSave(ConnectionInterface $con = null)
+    public function preSave(?ConnectionInterface $con = null): bool
     {
+
+        if (null !== $con
+            && method_exists($con, 'getEventDispatcher')
+            && null !== $con->getEventDispatcher()
+        ) {
+            $event = new MondialRelayDeliveryInsuranceEvent($this);
+
+            $con->getEventDispatcher()
+                ->dispatch(
+                    $event,
+                    MondialRelayDeliveryInsuranceEvent::PRE_SAVE
+                );
+
+            return !$event->isPropagationStopped();
+        }
+
         return true;
     }
 
     /**
      * Code to be run after persisting the object
-     * @param ConnectionInterface $con
+     * @param ConnectionInterface|null $con
+     * @return void
      */
-    public function postSave(ConnectionInterface $con = null)
+    public function postSave(?ConnectionInterface $con = null): void
     {
 
+        if (null !== $con
+            && method_exists($con, 'getEventDispatcher')
+            && null !== $con->getEventDispatcher()
+        ) {
+            $con->getEventDispatcher()
+                ->dispatch(
+                    new MondialRelayDeliveryInsuranceEvent($this),
+                    MondialRelayDeliveryInsuranceEvent::POST_SAVE
+                );
+        }
     }
 
     /**
      * Code to be run before inserting to database
-     * @param  ConnectionInterface $con
-     * @return boolean
+     * @param ConnectionInterface|null $con
+     * @return bool
      */
-    public function preInsert(ConnectionInterface $con = null)
+    public function preInsert(?ConnectionInterface $con = null): bool
     {
+
+        if (null !== $con
+            && method_exists($con, 'getEventDispatcher')
+            && null !== $con->getEventDispatcher()
+        ) {
+            $event = new MondialRelayDeliveryInsuranceEvent($this);
+            $con->getEventDispatcher()
+                ->dispatch(
+                    $event,
+                    MondialRelayDeliveryInsuranceEvent::PRE_INSERT
+                );
+
+            return !$event->isPropagationStopped();
+        }
+
         return true;
     }
 
     /**
      * Code to be run after inserting to database
-     * @param ConnectionInterface $con
+     * @param ConnectionInterface|null $con
+     * @return void
      */
-    public function postInsert(ConnectionInterface $con = null)
+    public function postInsert(?ConnectionInterface $con = null): void
     {
 
+        if (null !== $con
+            && method_exists($con, 'getEventDispatcher')
+            && null !== $con->getEventDispatcher()
+        ) {
+            $con->getEventDispatcher()
+                ->dispatch(
+                    new MondialRelayDeliveryInsuranceEvent($this),
+                    MondialRelayDeliveryInsuranceEvent::POST_INSERT
+                );
+        }
     }
 
     /**
      * Code to be run before updating the object in database
-     * @param  ConnectionInterface $con
-     * @return boolean
+     * @param ConnectionInterface|null $con
+     * @return bool
      */
-    public function preUpdate(ConnectionInterface $con = null)
+    public function preUpdate(?ConnectionInterface $con = null): bool
     {
+
+        if (null !== $con
+            && method_exists($con, 'getEventDispatcher')
+            && null !== $con->getEventDispatcher()
+        ) {
+            $event = new MondialRelayDeliveryInsuranceEvent($this);
+
+            $con->getEventDispatcher()
+                ->dispatch(
+                    $event,
+                    MondialRelayDeliveryInsuranceEvent::PRE_UPDATE
+                );
+
+            return !$event->isPropagationStopped();
+        }
+
         return true;
     }
 
     /**
      * Code to be run after updating the object in database
-     * @param ConnectionInterface $con
+     * @param ConnectionInterface|null $con
+     * @return void
      */
-    public function postUpdate(ConnectionInterface $con = null)
+    public function postUpdate(?ConnectionInterface $con = null): void
     {
 
+        if (null !== $con
+            && method_exists($con, 'getEventDispatcher')
+            && null !== $con->getEventDispatcher()
+        ) {
+            $con->getEventDispatcher()
+                ->dispatch(
+                    new MondialRelayDeliveryInsuranceEvent($this),
+                    MondialRelayDeliveryInsuranceEvent::POST_UPDATE
+                );
+        }
     }
 
     /**
      * Code to be run before deleting the object in database
-     * @param  ConnectionInterface $con
-     * @return boolean
+     * @param ConnectionInterface|null $con
+     * @return bool
      */
-    public function preDelete(ConnectionInterface $con = null)
+    public function preDelete(?ConnectionInterface $con = null): bool
     {
+
+        if (null !== $con
+            && method_exists($con, 'getEventDispatcher')
+            && null !== $con->getEventDispatcher()
+        ) {
+            $event = new MondialRelayDeliveryInsuranceEvent($this);
+
+            $con->getEventDispatcher()
+                ->dispatch(
+                    $event,
+                    MondialRelayDeliveryInsuranceEvent::PRE_DELETE
+                );
+
+            return !$event->isPropagationStopped();
+        }
+
         return true;
     }
 
     /**
      * Code to be run after deleting the object in database
-     * @param ConnectionInterface $con
+     * @param ConnectionInterface|null $con
+     * @return void
      */
-    public function postDelete(ConnectionInterface $con = null)
+    public function postDelete(?ConnectionInterface $con = null): void
     {
 
+        if (null !== $con
+            && method_exists($con, 'getEventDispatcher')
+            && null !== $con->getEventDispatcher()
+        ) {
+            $con->getEventDispatcher()
+                ->dispatch(
+                    new MondialRelayDeliveryInsuranceEvent($this),
+                    MondialRelayDeliveryInsuranceEvent::POST_DELETE
+                );
+        }
     }
 
 
@@ -1214,7 +1374,7 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
      * Allows to define default __call() behavior if you overwrite __call()
      *
      * @param string $name
-     * @param mixed  $params
+     * @param mixed $params
      *
      * @return array|string
      */
@@ -1234,15 +1394,18 @@ abstract class MondialRelayDeliveryInsurance implements ActiveRecordInterface
 
         if (0 === strpos($name, 'from')) {
             $format = substr($name, 4);
+            $inputData = $params[0];
+            $keyType = $params[1] ?? TableMap::TYPE_PHPNAME;
 
-            return $this->importFrom($format, reset($params));
+            return $this->importFrom($format, $inputData, $keyType);
         }
 
         if (0 === strpos($name, 'to')) {
             $format = substr($name, 2);
-            $includeLazyLoadColumns = isset($params[0]) ? $params[0] : true;
+            $includeLazyLoadColumns = $params[0] ?? true;
+            $keyType = $params[1] ?? TableMap::TYPE_PHPNAME;
 
-            return $this->exportTo($format, $includeLazyLoadColumns);
+            return $this->exportTo($format, $includeLazyLoadColumns, $keyType);
         }
 
         throw new BadMethodCallException(sprintf('Call to undefined method: %s.', $name));

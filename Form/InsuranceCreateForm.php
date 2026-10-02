@@ -8,9 +8,12 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay\Form;
 
 use MondialRelay\MondialRelay;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Thelia\Form\BaseForm;
 
@@ -19,24 +22,29 @@ use Thelia\Form\BaseForm;
  */
 class InsuranceCreateForm extends BaseForm
 {
-    protected function buildForm()
+    public static function getName(): string
+    {
+        return 'mondialrelay-insurance-create-form';
+    }
+
+    protected function buildForm(): void
     {
         $this->formBuilder
             ->add(
                 'max_value',
-                'number',
+                NumberType::class,
                 [
-                    "constraints" => [new GreaterThanOrEqual([ 'value' => 0 ])],
+                    'constraints' => [new GreaterThanOrEqual(['value' => 0])],
                     'label' => $this->translator->trans('Cart value', [], MondialRelay::DOMAIN_NAME),
                 ]
-            )->add(
+            )
+            ->add(
                 'price_with_tax',
-                'number',
+                NumberType::class,
                 [
-                    "constraints" => [new GreaterThanOrEqual([ 'value' => 0 ])],
+                    'constraints' => [new GreaterThanOrEqual(['value' => 0])],
                     'label' => $this->translator->trans('Insurance price', [], MondialRelay::DOMAIN_NAME),
                 ]
-            )
-        ;
+            );
     }
 }

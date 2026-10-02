@@ -8,9 +8,12 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay\Form;
 
 use MondialRelay\MondialRelay;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Thelia\Form\BaseForm;
 
@@ -19,24 +22,29 @@ use Thelia\Form\BaseForm;
  */
 class PriceCreateForm extends BaseForm
 {
-    protected function buildForm()
+    public static function getName(): string
+    {
+        return 'mondialrelay-price-create-form';
+    }
+
+    protected function buildForm(): void
     {
         $this->formBuilder
             ->add(
                 'max_weight',
-                'number',
+                NumberType::class,
                 [
-                    "constraints" => [new GreaterThan([ 'value' => 0 ])],
+                    'constraints' => [new GreaterThan(['value' => 0])],
                     'label' => $this->translator->trans('Weight up to...', [], MondialRelay::DOMAIN_NAME),
                 ]
-            )->add(
+            )
+            ->add(
                 'price',
-                'number',
+                NumberType::class,
                 [
-                    "constraints" => [new GreaterThan([ 'value' => 0 ])],
+                    'constraints' => [new GreaterThan(['value' => 0])],
                     'label' => $this->translator->trans('Price', [], MondialRelay::DOMAIN_NAME),
                 ]
-            )
-        ;
+            );
     }
 }

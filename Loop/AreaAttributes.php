@@ -13,6 +13,7 @@ namespace MondialRelay\Loop;
 use MondialRelay\Model\MondialRelayZoneConfiguration;
 use MondialRelay\Model\MondialRelayZoneConfigurationQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Thelia\Core\Template\Element\BaseLoop;
 use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
@@ -23,15 +24,15 @@ use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 /**
  * Class AreaAttributes
  * @package MondialRelay\Loop
- * @method int[] getAreaId()
- * @method int[] getDeliveryType()
+ * @method int[]|null getAreaId()
+ * @method int[]|null getDeliveryType()
  */
 class AreaAttributes extends BaseLoop implements PropelSearchLoopInterface
 {
     /**
      * @return \Thelia\Core\Template\Loop\Argument\ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('area_id'),
@@ -40,7 +41,7 @@ class AreaAttributes extends BaseLoop implements PropelSearchLoopInterface
     }
 
 
-    public function buildModelCriteria()
+    public function buildModelCriteria(): ModelCriteria
     {
         $query = MondialRelayZoneConfigurationQuery::create();
 
@@ -55,7 +56,7 @@ class AreaAttributes extends BaseLoop implements PropelSearchLoopInterface
         return $query;
     }
 
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         /** @var MondialRelayZoneConfiguration $item */
         foreach ($loopResult->getResultDataCollection() as $item) {

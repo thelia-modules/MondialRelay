@@ -13,6 +13,7 @@ namespace MondialRelay\Loop;
 use MondialRelay\Model\MondialRelayPickupAddress;
 use MondialRelay\Model\MondialRelayPickupAddressQuery;
 use MondialRelay\MondialRelay;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Thelia\Core\Template\Element\BaseLoop;
 use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
@@ -23,15 +24,15 @@ use Thelia\Model\OrderQuery;
 
 /**
  * @package MondialRelay\Loop
- * @method int getOrderAddressId()
- * @method int getOrderId()
+ * @method int|null getOrderAddressId()
+ * @method int|null getOrderId()
  */
 class SelectedPickupPoint extends BaseLoop implements PropelSearchLoopInterface
 {
     /**
      * @return \Thelia\Core\Template\Loop\Argument\ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntTypeArgument('order_address_id'),
@@ -42,25 +43,30 @@ class SelectedPickupPoint extends BaseLoop implements PropelSearchLoopInterface
 
     /**
      * @throws \Exception
-     * @return MondialRelayPickupAddressQuery|null
      */
-    public function buildModelCriteria()
+    public function buildModelCriteria(): ModelCriteria
     {
+        $query = MondialRelayPickupAddressQuery::create();
+
         if (null !== $relayId = $this->getCurrentRequest()->getSession()->get(MondialRelay::SESSION_SELECTED_PICKUP_RELAY_ID)) {
-            return MondialRelayPickupAddressQuery::create()->filterById($relayId);
-        } elseif (null !== $orderAddressId = $this->getOrderAddressId()) {
-            return MondialRelayPickupAddressQuery::create()->filterByOrderAddressId($orderAddressId);
-        } elseif (null !== $orderId = $this->getOrderId()) {
+            return $query->filterById($relayId);
+        }
+
+        if (null !== $orderAddressId = $this->getOrderAddressId()) {
+            return $query->filterByOrderAddressId($orderAddressId);
+        }
+
+        if (null !== $orderId = $this->getOrderId()) {
             if (null !== $order = OrderQuery::create()->findPk($orderId)) {
-                return MondialRelayPickupAddressQuery::create()
-                    ->filterByOrderAddressId($order->getDeliveryOrderAddressId());
+                return $query->filterByOrderAddressId($order->getDeliveryOrderAddressId());
             }
         }
 
-        return null;
+        // No selection criteria: return a query that matches nothing.
+        return $query->filterById(0);
     }
 
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         /** @var MondialRelayPickupAddress $item */
         foreach ($loopResult->getResultDataCollection() as $item) {

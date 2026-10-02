@@ -12,6 +12,7 @@ namespace MondialRelay\Loop;
 
 use MondialRelay\Model\MondialRelayDeliveryInsurance;
 use MondialRelay\Model\MondialRelayDeliveryInsuranceQuery;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Thelia\Core\Template\Element\BaseLoop;
 use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
@@ -28,14 +29,14 @@ class Insurances extends BaseLoop implements PropelSearchLoopInterface
     /**
      * @return \Thelia\Core\Template\Loop\Argument\ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
         );
     }
 
 
-    public function buildModelCriteria()
+    public function buildModelCriteria(): ModelCriteria
     {
         $query = MondialRelayDeliveryInsuranceQuery::create();
 
@@ -44,7 +45,7 @@ class Insurances extends BaseLoop implements PropelSearchLoopInterface
         return $query;
     }
 
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         /** @var MondialRelayDeliveryInsurance $item */
         foreach ($loopResult->getResultDataCollection() as $item) {

@@ -8,10 +8,11 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay\EventListeners;
 
 use MondialRelay\MondialRelay;
-use SoColissimo\SoColissimo;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\Order\OrderEvent;
 use Thelia\Core\Event\TheliaEvents;
@@ -47,7 +48,7 @@ class SendDeliveryEmail implements EventSubscriberInterface
             &&
             $order->getDeliveryModuleId() == MondialRelay::getModuleId()
         ) {
-            if (null !== $contactEmail = ConfigQuery::read('store_email')) {
+            if (null !== ConfigQuery::read('store_email')) {
                 $this->mailer->sendEmailToCustomer(
                     MondialRelay::TRACKING_MESSAGE_NAME,
                     $order->getCustomer(),
@@ -59,10 +60,10 @@ class SendDeliveryEmail implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            TheliaEvents::ORDER_UPDATE_STATUS => array("updateStatus", 128)
-        );
+        return [
+            TheliaEvents::ORDER_UPDATE_STATUS => ["updateStatus", 128],
+        ];
     }
 }

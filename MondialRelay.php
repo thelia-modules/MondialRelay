@@ -8,35 +8,44 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
+declare(strict_types=1);
+
 namespace MondialRelay;
 
 use MondialRelay\Model\MondialRelayDeliveryInsurance;
 use MondialRelay\Model\MondialRelayDeliveryPrice;
 use MondialRelay\Model\MondialRelayDeliveryPriceQuery;
 use MondialRelay\Model\MondialRelayZoneConfiguration;
-use Payzen\Model\Thelia\Model\ModuleConfigQuery;
+use MondialRelay\Model\MondialRelayZoneConfigurationQuery;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
+use Thelia\Core\HttpFoundation\Session\Session;
+use Thelia\Core\Install\Database;
 use Thelia\Core\Translation\Translator;
+use Thelia\Domain\Checkout\Enum\DeliveryMode;
 use Thelia\Exception\TheliaProcessException;
-use Thelia\Install\Database;
 use Thelia\Model\Area;
 use Thelia\Model\AreaDeliveryModule;
+use Thelia\Model\AreaDeliveryModuleQuery;
 use Thelia\Model\AreaQuery;
 use Thelia\Model\Country;
 use Thelia\Model\CountryArea;
+use Thelia\Model\CountryAreaQuery;
 use Thelia\Model\CountryQuery;
 use Thelia\Model\Currency;
 use Thelia\Model\Lang;
 use Thelia\Model\LangQuery;
 use Thelia\Model\Message;
 use Thelia\Model\MessageQuery;
-use Thelia\Model\ModuleConfig;
+use Thelia\Model\ModuleConfigQuery;
 use Thelia\Model\ModuleImageQuery;
 use Thelia\Model\OrderPostage;
-use Thelia\Module\AbstractDeliveryModule;
+use Thelia\Model\State;
+use Thelia\Module\AbstractDeliveryModuleWithState;
 use Thelia\Module\Exception\DeliveryException;
 
-class MondialRelay extends AbstractDeliveryModule
+class MondialRelay extends AbstractDeliveryModuleWithState
 {
     const DOMAIN_NAME = 'mondialrelay';
 
@@ -58,55 +67,146 @@ class MondialRelay extends AbstractDeliveryModule
     const MAX_WEIGHT_KG = 30;
     const MIN_WEIGHT_KG = 0.1;
 
-    /**
-     * This method is called by the Delivery  loop, to check if the current module has to be displayed to the customer.
-     * Override it to implements your delivery rules/
-     *
-     * If you return true, the delivery method will de displayed to the customer
-     * If you return false, the delivery method will not be displayed
-     *
-     * @param Country $country the country to deliver to.
-     *
-     * @return boolean
-     */
-    public function isValidDelivery(Country $country)
+    public function getDeliveryMode(): string
     {
-        // TODO: Implement isValidDelivery() method.
+        // Triggers the generic Flexy pickup-point picker at checkout.
+        return DeliveryMode::PICKUP->value;
+    }
+
+    public function isValidDelivery(Country $country, ?State $state = null): bool
+    {
+        return null !== $this->computePostage($country, $state);
     }
 
     /**
-     * Calculate and return delivery price in the shop's default currency
-     *
-     * @param Country $country the country to deliver to.
-     *
-     * @return OrderPostage|float             the delivery price
-     * @throws DeliveryException if the postage price cannot be calculated.
+     * @throws DeliveryException
      */
-    public function getPostage(Country $country)
+    public function getPostage(Country $country, ?State $state = null): OrderPostage|float
     {
-        // TODO: Implement getPostage() method.
+        $postage = $this->computePostage($country, $state);
+
+        if (null === $postage) {
+            throw new DeliveryException(
+                Translator::getInstance()->trans('Mondial Relay delivery is not available for this order.', [], self::DOMAIN_NAME)
+            );
+        }
+
+        return $postage;
+    }
+
+    /**
+     * Compute the (tax-included) postage for the destination, honouring the selected
+     * delivery type (relay/home) when set. Returns null when the module cannot deliver.
+     */
+    private function computePostage(Country $country, ?State $state): ?float
+    {
+        $session = $this->getRequest()->getSession();
+
+        $selectedDeliveryType = match ($this->getRequest()->get('mondial-relay-selected-delivery-mode')) {
+            'pickup' => MondialRelayZoneConfiguration::RELAY_DELIVERY_TYPE,
+            'home' => MondialRelayZoneConfiguration::HOME_DELIVERY_TYPE,
+            default => $session->get(self::SESSION_SELECTED_DELIVERY_TYPE),
+        };
+
+        $cart = $session instanceof Session ? $session->getSessionCart($this->getDispatcher()) : null;
+        $weight = max(self::MIN_WEIGHT_KG, (float) ($cart?->getWeight() ?? 0));
+        if ($weight > self::MAX_WEIGHT_KG) {
+            return null;
+        }
+
+        $moduleModel = $this->getModuleModel();
+        $countryHasRelay = false;
+        $countryHasHome = false;
+        $price = null;
+
+        /** @var CountryArea $countryInArea */
+        foreach (CountryAreaQuery::findByCountryAndState($country, $state) as $countryInArea) {
+            $areas = AreaDeliveryModuleQuery::create()
+                ->filterByAreaId($countryInArea->getAreaId())
+                ->filterByModule($moduleModel)
+                ->find();
+
+            /** @var AreaDeliveryModule $area */
+            foreach ($areas as $area) {
+                $zoneConfig = MondialRelayZoneConfigurationQuery::create()->findOneByAreaId($area->getAreaId());
+                if (null === $zoneConfig) {
+                    continue;
+                }
+
+                $zoneDeliveryType = $zoneConfig->getDeliveryType();
+
+                if (MondialRelayZoneConfiguration::ALL_DELIVERY_TYPE === $zoneDeliveryType) {
+                    $countryHasRelay = $countryHasHome = true;
+                } elseif (MondialRelayZoneConfiguration::HOME_DELIVERY_TYPE === $zoneDeliveryType) {
+                    $countryHasHome = true;
+                } elseif (MondialRelayZoneConfiguration::RELAY_DELIVERY_TYPE === $zoneDeliveryType) {
+                    $countryHasRelay = true;
+                }
+
+                if (null === $selectedDeliveryType || $zoneDeliveryType === $selectedDeliveryType) {
+                    $deliveryPrice = MondialRelayDeliveryPriceQuery::create()
+                        ->filterByAreaId($area->getAreaId())
+                        ->filterByMaxWeight($weight, Criteria::GREATER_EQUAL)
+                        ->orderByMaxWeight(Criteria::ASC)
+                        ->findOne();
+
+                    if (null !== $deliveryPrice) {
+                        $candidate = (float) $deliveryPrice->getPriceWithTax();
+                        $price = null === $price ? $candidate : min($price, $candidate);
+                    }
+                }
+            }
+        }
+
+        $relayAllowed = (bool) self::getConfigValue(self::ALLOW_RELAY_DELIVERY, '1');
+        $homeAllowed = (bool) self::getConfigValue(self::ALLOW_HOME_DELIVERY, '1');
+
+        if (null !== $price && (($countryHasHome && $homeAllowed) || ($countryHasRelay && $relayAllowed))) {
+            return $price;
+        }
+
+        return null;
+    }
+
+    public static function configureServices(ServicesConfigurator $servicesConfigurator): void
+    {
+        $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
+            ->exclude([
+                __DIR__.'/I18n/*',
+                __DIR__.'/Config/*',
+                __DIR__.'/vendor/*',
+                __DIR__.'/MondialRelay.php',
+            ])
+            ->autowire(true)
+            ->autoconfigure(true);
     }
 
     /**
      * @param ConnectionInterface|null $con
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function postActivation(ConnectionInterface $con = null)
+    public function postActivation(?ConnectionInterface $con = null): void
     {
-        try {
-            MondialRelayDeliveryPriceQuery::create()->findOne();
-        } catch (\Exception $e) {
-            $database = new Database($con);
-            $database->insertSql(null, [ __DIR__ . '/Config/thelia.sql' ]);
+        $needsSeeding = false;
 
+        try {
+            // An existing but empty table (e.g. after a partial activation) still needs seeding.
+            $needsSeeding = 0 === MondialRelayDeliveryPriceQuery::create()->count();
+        } catch (\Exception) {
+            // Table does not exist yet: create the schema first, then seed.
+            (new Database($con))->insertSql(null, [ __DIR__ . '/Config/thelia.sql' ]);
+            $needsSeeding = true;
+        }
+
+        if ($needsSeeding) {
             // Test Enseigne and private key
             self::setConfigValue(self::CODE_ENSEIGNE, "BDTEST13");
             self::setConfigValue(self::PRIVATE_KEY, "PrivateK");
             self::setConfigValue(self::WEBSERVICE_URL, "https://api.mondialrelay.com/Web_Services.asmx?WSDL");
             self::setConfigValue(self::GOOGLE_MAPS_API_KEY, "get_your_own_api_key");
-            self::setConfigValue(self::ALLOW_HOME_DELIVERY, true);
-            self::setConfigValue(self::ALLOW_RELAY_DELIVERY, true);
-            self::setConfigValue(self::ALLOW_INSURANCE, true);
+            self::setConfigValue(self::ALLOW_HOME_DELIVERY, '1');
+            self::setConfigValue(self::ALLOW_RELAY_DELIVERY, '1');
+            self::setConfigValue(self::ALLOW_INSURANCE, '1');
 
             // Create mondial relay shipping zones for relay and home delivery
 
@@ -156,8 +256,8 @@ class MondialRelay extends AbstractDeliveryModule
                 foreach ($shippingZone->prices as $price) {
                     (new MondialRelayDeliveryPrice())
                         ->setAreaId($area->getId())
-                        ->setMaxWeight($price->up_to)
-                        ->setPriceWithTax($price->price_euro * $rateFromEuro)
+                        ->setMaxWeight((string) $price->up_to)
+                        ->setPriceWithTax((string) ($price->price_euro * $rateFromEuro))
                         ->save();
                 }
             }
@@ -165,8 +265,8 @@ class MondialRelay extends AbstractDeliveryModule
             // Insurances
             foreach ($moduleConfiguration->insurances as $insurance) {
                 (new MondialRelayDeliveryInsurance())
-                    ->setMaxValue($insurance->value)
-                    ->setPriceWithTax($insurance->price_with_tax_euro)
+                    ->setMaxValue((string) $insurance->value)
+                    ->setPriceWithTax((string) $insurance->price_with_tax_euro)
                     ->setLevel($insurance->level)
                     ->save();
             }
@@ -213,7 +313,7 @@ class MondialRelay extends AbstractDeliveryModule
      * @param bool $deleteModuleData
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function destroy(ConnectionInterface $con = null, $deleteModuleData = false)
+    public function destroy(?ConnectionInterface $con = null, $deleteModuleData = false): void
     {
         if ($deleteModuleData) {
             // Delete message

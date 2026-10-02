@@ -24,129 +24,170 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class MondialRelayPickupAddressTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
+
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'MondialRelay.Model.Map.MondialRelayPickupAddressTableMap';
+    public const CLASS_NAME = 'MondialRelay.Model.Map.MondialRelayPickupAddressTableMap';
 
     /**
      * The default database name for this class
      */
-    const DATABASE_NAME = 'thelia';
+    public const DATABASE_NAME = 'TheliaMain';
 
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'mondial_relay_pickup_address';
+    public const TABLE_NAME = 'mondial_relay_pickup_address';
+
+    /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'MondialRelayPickupAddress';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\MondialRelay\\Model\\MondialRelayPickupAddress';
+    public const OM_CLASS = '\\MondialRelay\\Model\\MondialRelayPickupAddress';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'MondialRelay.Model.MondialRelayPickupAddress';
+    public const CLASS_DEFAULT = 'MondialRelay.Model.MondialRelayPickupAddress';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    public const NUM_COLUMNS = 3;
 
     /**
      * The number of lazy-loaded columns
      */
-    const NUM_LAZY_LOAD_COLUMNS = 0;
+    public const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    public const NUM_HYDRATE_COLUMNS = 3;
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const ID = 'mondial_relay_pickup_address.ID';
+    public const COL_ID = 'mondial_relay_pickup_address.id';
 
     /**
-     * the column name for the JSON_RELAY_DATA field
+     * the column name for the json_relay_data field
      */
-    const JSON_RELAY_DATA = 'mondial_relay_pickup_address.JSON_RELAY_DATA';
+    public const COL_JSON_RELAY_DATA = 'mondial_relay_pickup_address.json_relay_data';
 
     /**
-     * the column name for the ORDER_ADDRESS_ID field
+     * the column name for the order_address_id field
      */
-    const ORDER_ADDRESS_ID = 'mondial_relay_pickup_address.ORDER_ADDRESS_ID';
+    public const COL_ORDER_ADDRESS_ID = 'mondial_relay_pickup_address.order_address_id';
 
     /**
      * The default string format for model objects of the related table
      */
-    const DEFAULT_STRING_FORMAT = 'YAML';
+    public const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
      * holds an array of fieldnames
      *
      * first dimension keys are the type constants
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
+     *
+     * @var array<string, mixed>
      */
-    protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'JsonRelayData', 'OrderAddressId', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'jsonRelayData', 'orderAddressId', ),
-        self::TYPE_COLNAME       => array(MondialRelayPickupAddressTableMap::ID, MondialRelayPickupAddressTableMap::JSON_RELAY_DATA, MondialRelayPickupAddressTableMap::ORDER_ADDRESS_ID, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'JSON_RELAY_DATA', 'ORDER_ADDRESS_ID', ),
-        self::TYPE_FIELDNAME     => array('id', 'json_relay_data', 'order_address_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
-    );
+    protected static $fieldNames = [
+        self::TYPE_PHPNAME       => ['Id', 'JsonRelayData', 'OrderAddressId', ],
+        self::TYPE_CAMELNAME     => ['id', 'jsonRelayData', 'orderAddressId', ],
+        self::TYPE_COLNAME       => [MondialRelayPickupAddressTableMap::COL_ID, MondialRelayPickupAddressTableMap::COL_JSON_RELAY_DATA, MondialRelayPickupAddressTableMap::COL_ORDER_ADDRESS_ID, ],
+        self::TYPE_FIELDNAME     => ['id', 'json_relay_data', 'order_address_id', ],
+        self::TYPE_NUM           => [0, 1, 2, ]
+    ];
 
     /**
      * holds an array of keys for quick access to the fieldnames array
      *
      * first dimension keys are the type constants
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
+     *
+     * @var array<string, mixed>
      */
-    protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'JsonRelayData' => 1, 'OrderAddressId' => 2, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'jsonRelayData' => 1, 'orderAddressId' => 2, ),
-        self::TYPE_COLNAME       => array(MondialRelayPickupAddressTableMap::ID => 0, MondialRelayPickupAddressTableMap::JSON_RELAY_DATA => 1, MondialRelayPickupAddressTableMap::ORDER_ADDRESS_ID => 2, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'JSON_RELAY_DATA' => 1, 'ORDER_ADDRESS_ID' => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'json_relay_data' => 1, 'order_address_id' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
-    );
+    protected static $fieldKeys = [
+        self::TYPE_PHPNAME       => ['Id' => 0, 'JsonRelayData' => 1, 'OrderAddressId' => 2, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'jsonRelayData' => 1, 'orderAddressId' => 2, ],
+        self::TYPE_COLNAME       => [MondialRelayPickupAddressTableMap::COL_ID => 0, MondialRelayPickupAddressTableMap::COL_JSON_RELAY_DATA => 1, MondialRelayPickupAddressTableMap::COL_ORDER_ADDRESS_ID => 2, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'json_relay_data' => 1, 'order_address_id' => 2, ],
+        self::TYPE_NUM           => [0, 1, 2, ]
+    ];
+
+    /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var array<string>
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'MondialRelayPickupAddress.Id' => 'ID',
+        'id' => 'ID',
+        'mondialRelayPickupAddress.id' => 'ID',
+        'MondialRelayPickupAddressTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'mondial_relay_pickup_address.id' => 'ID',
+        'JsonRelayData' => 'JSON_RELAY_DATA',
+        'MondialRelayPickupAddress.JsonRelayData' => 'JSON_RELAY_DATA',
+        'jsonRelayData' => 'JSON_RELAY_DATA',
+        'mondialRelayPickupAddress.jsonRelayData' => 'JSON_RELAY_DATA',
+        'MondialRelayPickupAddressTableMap::COL_JSON_RELAY_DATA' => 'JSON_RELAY_DATA',
+        'COL_JSON_RELAY_DATA' => 'JSON_RELAY_DATA',
+        'json_relay_data' => 'JSON_RELAY_DATA',
+        'mondial_relay_pickup_address.json_relay_data' => 'JSON_RELAY_DATA',
+        'OrderAddressId' => 'ORDER_ADDRESS_ID',
+        'MondialRelayPickupAddress.OrderAddressId' => 'ORDER_ADDRESS_ID',
+        'orderAddressId' => 'ORDER_ADDRESS_ID',
+        'mondialRelayPickupAddress.orderAddressId' => 'ORDER_ADDRESS_ID',
+        'MondialRelayPickupAddressTableMap::COL_ORDER_ADDRESS_ID' => 'ORDER_ADDRESS_ID',
+        'COL_ORDER_ADDRESS_ID' => 'ORDER_ADDRESS_ID',
+        'order_address_id' => 'ORDER_ADDRESS_ID',
+        'mondial_relay_pickup_address.order_address_id' => 'ORDER_ADDRESS_ID',
+    ];
 
     /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
      * @return void
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function initialize()
+    public function initialize(): void
     {
         // attributes
         $this->setName('mondial_relay_pickup_address');
         $this->setPhpName('MondialRelayPickupAddress');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\MondialRelay\\Model\\MondialRelayPickupAddress');
         $this->setPackage('MondialRelay.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('JSON_RELAY_DATA', 'JsonRelayData', 'CLOB', true, null, null);
-        $this->addColumn('ORDER_ADDRESS_ID', 'OrderAddressId', 'INTEGER', true, null, null);
-    } // initialize()
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('json_relay_data', 'JsonRelayData', 'CLOB', true, null, null);
+        $this->addColumn('order_address_id', 'OrderAddressId', 'INTEGER', true, null, null);
+    }
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
-    public function buildRelations()
+    public function buildRelations(): void
     {
-    } // buildRelations()
+    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -154,19 +195,21 @@ class MondialRelayPickupAddressTableMap extends TableMap
      * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
-     * @param array  $row       resultset row.
-     * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param array $row Resultset row.
+     * @param int $offset The 0-based offset for reading from the resultset row.
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *
+     * @return string|null The primary key hash of the row
      */
-    public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
+    public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
         if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -174,21 +217,20 @@ class MondialRelayPickupAddressTableMap extends TableMap
      * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
      * a multi-column primary key, an array of the primary key columns will be returned.
      *
-     * @param array  $row       resultset row.
-     * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param array $row Resultset row.
+     * @param int $offset The 0-based offset for reading from the resultset row.
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
-    public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
+    public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
-
-            return (int) $row[
-                            $indexType == TableMap::TYPE_NUM
-                            ? 0 + $offset
-                            : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
-                        ];
+        return (int) $row[
+            $indexType == TableMap::TYPE_NUM
+                ? 0 + $offset
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+        ];
     }
 
     /**
@@ -199,10 +241,10 @@ class MondialRelayPickupAddressTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param bool $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
-    public static function getOMClass($withPrefix = true)
+    public static function getOMClass(bool $withPrefix = true): string
     {
         return $withPrefix ? MondialRelayPickupAddressTableMap::CLASS_DEFAULT : MondialRelayPickupAddressTableMap::OM_CLASS;
     }
@@ -210,17 +252,17 @@ class MondialRelayPickupAddressTableMap extends TableMap
     /**
      * Populates an object of the default type or an object that inherit from the default.
      *
-     * @param array  $row       row returned by DataFetcher->fetch().
-     * @param int    $offset    The 0-based offset for reading from the resultset row.
+     * @param array $row Row returned by DataFetcher->fetch().
+     * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      * @return array (MondialRelayPickupAddress object, last column rank)
      */
-    public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
+    public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
         $key = MondialRelayPickupAddressTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
         if (null !== ($obj = MondialRelayPickupAddressTableMap::getInstanceFromPool($key))) {
@@ -230,12 +272,13 @@ class MondialRelayPickupAddressTableMap extends TableMap
             $col = $offset + MondialRelayPickupAddressTableMap::NUM_HYDRATE_COLUMNS;
         } else {
             $cls = MondialRelayPickupAddressTableMap::OM_CLASS;
+            /** @var MondialRelayPickupAddress $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
             MondialRelayPickupAddressTableMap::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**
@@ -243,13 +286,13 @@ class MondialRelayPickupAddressTableMap extends TableMap
      * objects that inherit from the default.
      *
      * @param DataFetcherInterface $dataFetcher
-     * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @return array<object>
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
-    public static function populateObjects(DataFetcherInterface $dataFetcher)
+    public static function populateObjects(DataFetcherInterface $dataFetcher): array
     {
-        $results = array();
+        $results = [];
 
         // set the class once to avoid overhead in the loop
         $cls = static::getOMClass(false);
@@ -262,6 +305,7 @@ class MondialRelayPickupAddressTableMap extends TableMap
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
+                /** @var MondialRelayPickupAddress $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
@@ -278,21 +322,47 @@ class MondialRelayPickupAddressTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param Criteria $criteria Object containing the columns to add.
+     * @param string|null $alias Optional table alias
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     * @return void
      */
-    public static function addSelectColumns(Criteria $criteria, $alias = null)
+    public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(MondialRelayPickupAddressTableMap::ID);
-            $criteria->addSelectColumn(MondialRelayPickupAddressTableMap::JSON_RELAY_DATA);
-            $criteria->addSelectColumn(MondialRelayPickupAddressTableMap::ORDER_ADDRESS_ID);
+            $criteria->addSelectColumn(MondialRelayPickupAddressTableMap::COL_ID);
+            $criteria->addSelectColumn(MondialRelayPickupAddressTableMap::COL_JSON_RELAY_DATA);
+            $criteria->addSelectColumn(MondialRelayPickupAddressTableMap::COL_ORDER_ADDRESS_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.JSON_RELAY_DATA');
-            $criteria->addSelectColumn($alias . '.ORDER_ADDRESS_ID');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.json_relay_data');
+            $criteria->addSelectColumn($alias . '.order_address_id');
+        }
+    }
+
+    /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria Object containing the columns to remove.
+     * @param string|null $alias Optional table alias
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     * @return void
+     */
+    public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(MondialRelayPickupAddressTableMap::COL_ID);
+            $criteria->removeSelectColumn(MondialRelayPickupAddressTableMap::COL_JSON_RELAY_DATA);
+            $criteria->removeSelectColumn(MondialRelayPickupAddressTableMap::COL_ORDER_ADDRESS_ID);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.json_relay_data');
+            $criteria->removeSelectColumn($alias . '.order_address_id');
         }
     }
 
@@ -300,37 +370,26 @@ class MondialRelayPickupAddressTableMap extends TableMap
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
-    public static function getTableMap()
+    public static function getTableMap(): TableMap
     {
         return Propel::getServiceContainer()->getDatabaseMap(MondialRelayPickupAddressTableMap::DATABASE_NAME)->getTable(MondialRelayPickupAddressTableMap::TABLE_NAME);
     }
 
     /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-      $dbMap = Propel::getServiceContainer()->getDatabaseMap(MondialRelayPickupAddressTableMap::DATABASE_NAME);
-      if (!$dbMap->hasTable(MondialRelayPickupAddressTableMap::TABLE_NAME)) {
-        $dbMap->addTableObject(new MondialRelayPickupAddressTableMap());
-      }
-    }
-
-    /**
      * Performs a DELETE on the database, given a MondialRelayPickupAddress or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or MondialRelayPickupAddress object or primary key or array of primary keys
+     * @param mixed $values Criteria or MondialRelayPickupAddress object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         if supported by native driver or if emulated using Propel.
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
-     public static function doDelete($values, ConnectionInterface $con = null)
+     public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayPickupAddressTableMap::DATABASE_NAME);
@@ -344,14 +403,16 @@ class MondialRelayPickupAddressTableMap extends TableMap
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
             $criteria = new Criteria(MondialRelayPickupAddressTableMap::DATABASE_NAME);
-            $criteria->add(MondialRelayPickupAddressTableMap::ID, (array) $values, Criteria::IN);
+            $criteria->add(MondialRelayPickupAddressTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
         $query = MondialRelayPickupAddressQuery::create()->mergeWith($criteria);
 
-        if ($values instanceof Criteria) { MondialRelayPickupAddressTableMap::clearInstancePool();
-        } elseif (!is_object($values)) { // it's a primary key, or an array of pks
-            foreach ((array) $values as $singleval) { MondialRelayPickupAddressTableMap::removeInstanceFromPool($singleval);
+        if ($values instanceof Criteria) {
+            MondialRelayPickupAddressTableMap::clearInstancePool();
+        } elseif (!\is_object($values)) { // it's a primary key, or an array of pks
+            foreach ((array) $values as $singleval) {
+                MondialRelayPickupAddressTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -364,7 +425,7 @@ class MondialRelayPickupAddressTableMap extends TableMap
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public static function doDeleteAll(ConnectionInterface $con = null)
+    public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
         return MondialRelayPickupAddressQuery::create()->doDeleteAll($con);
     }
@@ -372,13 +433,13 @@ class MondialRelayPickupAddressTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a MondialRelayPickupAddress or Criteria object.
      *
-     * @param mixed               $criteria Criteria or MondialRelayPickupAddress object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or MondialRelayPickupAddress object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @return mixed The new primary key.
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
-    public static function doInsert($criteria, ConnectionInterface $con = null)
+    public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(MondialRelayPickupAddressTableMap::DATABASE_NAME);
@@ -390,29 +451,19 @@ class MondialRelayPickupAddressTableMap extends TableMap
             $criteria = $criteria->buildCriteria(); // build Criteria from MondialRelayPickupAddress object
         }
 
-        if ($criteria->containsKey(MondialRelayPickupAddressTableMap::ID) && $criteria->keyContainsValue(MondialRelayPickupAddressTableMap::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.MondialRelayPickupAddressTableMap::ID.')');
+        if ($criteria->containsKey(MondialRelayPickupAddressTableMap::COL_ID) && $criteria->keyContainsValue(MondialRelayPickupAddressTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.MondialRelayPickupAddressTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
         $query = MondialRelayPickupAddressQuery::create()->mergeWith($criteria);
 
-        try {
-            // use transaction because $criteria could contain info
-            // for more than one table (I guess, conceivably)
-            $con->beginTransaction();
-            $pk = $query->doInsert($con);
-            $con->commit();
-        } catch (PropelException $e) {
-            $con->rollBack();
-            throw $e;
-        }
-
-        return $pk;
+        // use transaction because $criteria could contain info
+        // for more than one table (I guess, conceivably)
+        return $con->transaction(function () use ($con, $query) {
+            return $query->doInsert($con);
+        });
     }
 
-} // MondialRelayPickupAddressTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-MondialRelayPickupAddressTableMap::buildTableMap();
+}
